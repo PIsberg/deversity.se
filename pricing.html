@@ -6,6 +6,11 @@
 <meta name="description" content="Commercial licensing for async-test-lib, billed yearly per company email domain. Non-commercial use is free.">
 <meta name="theme-color" content="#0a0f16">
 <link rel="canonical" href="https://deversity.se/pricing.html">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://deversity.se/pricing.html">
+<meta property="og:title" content="Pricing - Deversity">
+<meta property="og:description" content="Commercial licensing for async-test-lib, billed yearly per company email domain. Non-commercial use is free.">
+<meta name="twitter:card" content="summary">
 <title>Pricing - Deversity</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230a0f16'/%3E%3Cpath d='M22 17h11a15 15 0 0 1 0 30H22z' fill='none' stroke='%233ecf8e' stroke-width='6' stroke-linejoin='round'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="assets/site.css">
@@ -27,9 +32,11 @@
   </nav>
 </header>
 <main class="mkt">
+  <p class="eyebrow">// pricing</p>
   <h1>Pricing</h1>
   <p class="sub">async-test-lib commercial license, billed yearly per company email domain.</p>
 
+  <div class="table-wrap">
   <table>
     <thead>
       <tr><th>Developers</th><th>Price per year</th><th class="buy-col"></th></tr>
@@ -62,17 +69,26 @@
       </tr>
     </tbody>
   </table>
+  </div>
 
   <p id="checkout-status" class="note" hidden></p>
 
-  <p>One license covers your whole team — there are no per-seat keys. The developer count is
-  the number of developers whose builds run async-test-lib. Subscriptions renew yearly and can
-  be cancelled at any time; a cancelled license stays valid until the end of the paid term.</p>
-
-  <p>Your license is bound to <strong>one email address that you nominate</strong> — typically a
-  shared address such as <code>licence@yourcompany.com</code>. Every developer and CI job uses
-  that same address in the build config; they do not use their own. Tell us if it ever needs to
-  move and we will re-point the license without issuing a new key.</p>
+  <div class="grid">
+    <div class="card">
+      <h3>Covers your whole team</h3>
+      <p>One license covers your whole team — there are no per-seat keys. The developer count
+      is the number of developers whose builds run async-test-lib. Subscriptions renew yearly
+      and can be cancelled at any time; a cancelled license stays valid until the end of the
+      paid term.</p>
+    </div>
+    <div class="card">
+      <h3>One nominated address</h3>
+      <p>Your license is bound to <strong>one email address that you nominate</strong> — typically
+      a shared address such as <code>licence@yourcompany.com</code>. Every developer and CI job
+      uses that same address in the build config; they do not use their own. Tell us if it ever
+      needs to move and we will re-point the license without issuing a new key.</p>
+    </div>
+  </div>
 
   <p class="note">Checkout is handled by Paddle, our merchant of record, which acts as the seller
   of record and handles VAT and sales tax. Prices exclude tax; it is added at checkout. Your
