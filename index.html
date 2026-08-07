@@ -3,49 +3,152 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Deversity</title>
+<meta name="description" content="Deversity builds async-test-lib, a JUnit 5 extension that stress-tests JVM code under maximum thread contention and reports race conditions, deadlocks, missed signals, and more.">
+<meta name="theme-color" content="#0a0f16">
+<title>Deversity - Concurrency testing for the JVM</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230a0f16'/%3E%3Cpath d='M22 17h11a15 15 0 0 1 0 30H22z' fill='none' stroke='%233ecf8e' stroke-width='6' stroke-linejoin='round'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="assets/site.css">
 </head>
 <body>
-<header>
+<header class="site-head">
   <nav class="nav">
-    <a class="brand" href="index.html">Deversity</a>
-    <a href="pricing.html">Pricing</a>
-    <a href="terms.html">Terms of Service</a>
-    <a href="privacy.html">Privacy Notice</a>
-    <a href="refunds.html">Refund Policy</a>
+    <a class="brand" href="index.html">
+      <svg class="mark" width="20" height="20" viewBox="0 0 64 64" aria-hidden="true"><rect x="2" y="2" width="60" height="60" rx="14" fill="none" stroke="currentColor" opacity="0.35" stroke-width="4"/><path d="M22 17h11a15 15 0 0 1 0 30H22z" fill="none" stroke="currentColor" stroke-width="6" stroke-linejoin="round"/></svg>
+      Deversity
+    </a>
+    <div class="nav-links">
+      <a href="pricing.html">Pricing</a>
+      <a href="terms.html">Terms</a>
+      <a href="privacy.html">Privacy</a>
+      <a href="refunds.html">Refunds</a>
+      <a href="https://github.com/PIsberg/async-test-lib">GitHub</a>
+    </div>
   </nav>
 </header>
-<main>
-  <h1>Deversity</h1>
-  <p class="sub">Developer tooling for concurrency testing on the JVM.</p>
+<main class="mkt">
 
-  <p>Deversity builds and maintains
-  <a href="https://github.com/PIsberg/async-test-lib">async-test-lib</a>, a JUnit&nbsp;5 extension
-  that stress-tests code under maximum thread contention. A single <code>@AsyncTest</code>
-  annotation runs a test body on N threads for M rounds, forces the threads to collide, and
-  reports what more than a hundred concurrency detectors observed: race conditions, deadlocks,
-  missed signals, unsafe publication, and more.</p>
+  <section class="hero">
+    <div class="hero-copy">
+      <p class="eyebrow">// developer tooling for the JVM</p>
+      <h1>Concurrency bugs,<br><span class="dim">forced out of hiding.</span></h1>
+      <p class="lede">Deversity builds and maintains
+      <a href="https://github.com/PIsberg/async-test-lib">async-test-lib</a>, a JUnit&nbsp;5
+      extension that stress-tests code under maximum thread contention. A single
+      <code>@AsyncTest</code> annotation runs a test body on N threads for M rounds, forces
+      the threads to collide, and reports what more than a hundred concurrency detectors
+      observed.</p>
+      <div class="actions">
+        <a class="cta" href="pricing.html">See pricing</a>
+        <a class="ghost" href="https://github.com/PIsberg/async-test-lib">View on GitHub</a>
+      </div>
+    </div>
+    <figure class="term" role="img" aria-label="Example: an AsyncTest run reporting a race condition">
+      <figcaption class="term-bar">
+        <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+        <span class="term-title">TransferTest.java</span>
+      </figcaption>
+      <pre class="term-code"><code><span class="ann">@AsyncTest</span>(threads = <span class="num">8</span>, rounds = <span class="num">500</span>)
+<span class="kw">void</span> <span class="fn">concurrentTransfers</span>() {
+    account.transfer(from, to, <span class="num">100</span>);
+}</code></pre>
+      <div class="term-report">
+        <p class="rep-line fail"><span>&#x2717; race condition</span>lost update on <code>Account.balance</code>, round 231</p>
+        <p class="rep-line fail"><span>&#x2717; unsafe publication</span><code>Account</code> visible before fully constructed</p>
+        <p class="rep-line ok"><span>&#x2713; contention</span>8 threads &times; 500 rounds, 100+ detectors watching</p>
+      </div>
+    </figure>
+  </section>
 
-  <h2>How licensing works</h2>
-  <p>async-test-lib is free for non-commercial use under the
-  <a href="https://polyformproject.org/licenses/noncommercial/1.0.0/">PolyForm Noncommercial
-  License 1.0.0</a>. Commercial use requires an annual license, priced by team size. A license
-  covers every developer on your company email domain. There are no per-seat keys.</p>
+  <section class="stats" aria-label="Key facts">
+    <div><strong>100+</strong><span>concurrency detectors</span></div>
+    <div><strong>1</strong><span>annotation to add</span></div>
+    <div><strong>N &times; M</strong><span>threads &times; rounds, forced to collide</span></div>
+  </section>
 
-  <p><a class="cta" href="pricing.html">See pricing</a></p>
+  <section>
+    <h2>What it catches</h2>
+    <div class="grid">
+      <div class="card">
+        <p class="tag">RACE</p>
+        <h3>Race conditions</h3>
+        <p>Lost updates and check-then-act windows that only open under real contention.</p>
+      </div>
+      <div class="card">
+        <p class="tag">DEADLOCK</p>
+        <h3>Deadlocks</h3>
+        <p>Lock cycles and stuck threads, caught in the test run instead of in production.</p>
+      </div>
+      <div class="card">
+        <p class="tag">SIGNAL</p>
+        <h3>Missed signals</h3>
+        <p>Waits and notifies that never meet, condition waits that sleep forever.</p>
+      </div>
+      <div class="card">
+        <p class="tag">PUBLISH</p>
+        <h3>Unsafe publication</h3>
+        <p>Objects visible to other threads before they are fully constructed.</p>
+      </div>
+    </div>
+    <p class="sub">And more, from a suite of more than a hundred detectors.</p>
+  </section>
 
-  <h2>Contact</h2>
-  <p>Deversity is operated by Peter Isberg, Sweden.<br>
-  Email: <a href="mailto:isberg.peter@gmail.com">isberg.peter@gmail.com</a></p>
+  <section>
+    <h2>How it works</h2>
+    <div class="grid steps">
+      <div class="card">
+        <span class="num">01</span>
+        <h3>Annotate</h3>
+        <p>Add <code>@AsyncTest(threads = N, rounds = M)</code> to a JUnit&nbsp;5 test body.</p>
+      </div>
+      <div class="card">
+        <span class="num">02</span>
+        <h3>Collide</h3>
+        <p>The extension runs the body on N threads for M rounds and forces the threads to collide at the worst possible moments.</p>
+      </div>
+      <div class="card">
+        <span class="num">03</span>
+        <h3>Read the report</h3>
+        <p>The detectors report race conditions, deadlocks, missed signals, unsafe publication, and more.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>How licensing works</h2>
+    <div class="grid lic">
+      <div class="card">
+        <h3>Non-commercial</h3>
+        <p class="price-line">Free</p>
+        <p>async-test-lib is free for non-commercial use under the
+        <a href="https://polyformproject.org/licenses/noncommercial/1.0.0/">PolyForm
+        Noncommercial License 1.0.0</a>. No license key needed.</p>
+      </div>
+      <div class="card hot">
+        <h3>Commercial</h3>
+        <p class="price-line">Annual license, priced by team size</p>
+        <p>A license covers every developer on your company email domain. There are no
+        per-seat keys.</p>
+        <a class="cta" href="pricing.html">See pricing</a>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Contact</h2>
+    <p>Deversity is operated by Peter Isberg, Sweden.<br>
+    Email: <a href="mailto:isberg.peter@gmail.com">isberg.peter@gmail.com</a></p>
+  </section>
+
 </main>
-<footer>
+<footer class="site-foot">
   <div class="inner">
-    Deversity, Sweden &middot;
-    <a href="terms.html">Terms</a> &middot;
-    <a href="privacy.html">Privacy</a> &middot;
-    <a href="refunds.html">Refunds</a> &middot;
-    <a href="mailto:isberg.peter@gmail.com">Contact</a>
+    <span>&copy; 2026 Deversity, Sweden</span>
+    <nav>
+      <a href="terms.html">Terms</a>
+      <a href="privacy.html">Privacy</a>
+      <a href="refunds.html">Refunds</a>
+      <a href="mailto:isberg.peter@gmail.com">Contact</a>
+    </nav>
   </div>
 </footer>
 </body>
