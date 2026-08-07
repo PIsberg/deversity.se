@@ -121,7 +121,9 @@
   Paddle.Initialize({ token: TOKEN });
 
   // Localized prices: Paddle detects the customer's country and returns formatted
-  // totals, so there is no currency maths here.
+  // totals, so there is no currency maths here. Show `subtotal`, not `total`: the
+  // account sells tax-exclusive, so `total` already has VAT added and would
+  // contradict the note below promising tax is added at checkout.
   var priceCells = Array.prototype.slice.call(document.querySelectorAll('.price[data-price-id]'));
   if (priceCells.length && Paddle.PricePreview) {
     Paddle.PricePreview({
@@ -131,8 +133,8 @@
     }).then(function (result) {
       (result.data.details.lineItems || []).forEach(function (item) {
         var cell = document.querySelector('.price[data-price-id="' + item.price.id + '"]');
-        if (cell && item.formattedTotals && item.formattedTotals.total) {
-          cell.textContent = item.formattedTotals.total;
+        if (cell && item.formattedTotals && item.formattedTotals.subtotal) {
+          cell.textContent = item.formattedTotals.subtotal;
         }
       });
     }).catch(function () {
