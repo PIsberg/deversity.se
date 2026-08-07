@@ -31,16 +31,38 @@
 
   <table>
     <thead>
-      <tr><th>Developers</th><th>Price per year</th></tr>
+      <tr><th>Developers</th><th>Price per year</th><th class="buy-col"></th></tr>
     </thead>
     <tbody>
-      <tr><td>1 to 9</td><td class="price">&euro;250</td></tr>
-      <tr><td>10 to 49</td><td class="price">&euro;900</td></tr>
-      <tr><td>50 to 199</td><td class="price">&euro;2,500</td></tr>
-      <tr><td>200+</td><td class="price">&euro;6,000</td></tr>
-      <tr><td>OEM / redistribution</td><td class="price">from &euro;10,000, negotiated</td></tr>
+      <tr>
+        <td>1 to 9</td>
+        <td class="price" data-price-id="pri_01kzdb19bce4cxw9hadg54wg2s" data-fallback="&euro;250">&euro;250</td>
+        <td class="buy-col"><button class="buy" type="button" data-price-id="pri_01kzdb19bce4cxw9hadg54wg2s" data-tier="1 to 9 developers">Buy</button></td>
+      </tr>
+      <tr>
+        <td>10 to 49</td>
+        <td class="price" data-price-id="pri_01kzdb2ja6gm0pbw8za6y080pw" data-fallback="&euro;900">&euro;900</td>
+        <td class="buy-col"><button class="buy" type="button" data-price-id="pri_01kzdb2ja6gm0pbw8za6y080pw" data-tier="10 to 49 developers">Buy</button></td>
+      </tr>
+      <tr>
+        <td>50 to 199</td>
+        <td class="price" data-price-id="pri_01kzdb3tbre6gmtn3ct428hnnh" data-fallback="&euro;2,500">&euro;2,500</td>
+        <td class="buy-col"><button class="buy" type="button" data-price-id="pri_01kzdb3tbre6gmtn3ct428hnnh" data-tier="50 to 199 developers">Buy</button></td>
+      </tr>
+      <tr>
+        <td>200+</td>
+        <td class="price" data-price-id="pri_01kzdb53cjn6rzhy4da9gent8v" data-fallback="&euro;6,000">&euro;6,000</td>
+        <td class="buy-col"><button class="buy" type="button" data-price-id="pri_01kzdb53cjn6rzhy4da9gent8v" data-tier="200+ developers">Buy</button></td>
+      </tr>
+      <tr>
+        <td>OEM / redistribution</td>
+        <td class="price">from &euro;10,000, negotiated</td>
+        <td class="buy-col"><a class="buy buy-link" href="mailto:isberg.peter@gmail.com?subject=async-test-lib%20OEM%20license">Email</a></td>
+      </tr>
     </tbody>
   </table>
+
+  <p id="checkout-status" class="note" hidden></p>
 
   <p>One license covers every developer on your company email domain. The developer count is
   the number of developers whose builds run async-test-lib. Subscriptions renew yearly and can
@@ -50,7 +72,9 @@
   record for the transaction and handles VAT and sales tax. Your license key is delivered by
   email after purchase.</p>
 
-  <p><a class="cta" href="mailto:isberg.peter@gmail.com?subject=async-test-lib%20license">Email us to purchase</a></p>
+  <p>Prices are shown in your local currency where Paddle supports it; you are charged the
+  amount displayed at checkout. Prefer an invoice, a purchase order, or have a question first?
+  <a href="mailto:isberg.peter@gmail.com?subject=async-test-lib%20license">Email us</a>.</p>
 
   <h2>Running without a license</h2>
   <p>Non-commercial use is free and needs no key. Developers on free email providers are
@@ -69,5 +93,72 @@
     </nav>
   </div>
 </footer>
+<script src="https://cdn.paddle.com/paddle/v2/paddle.js"></script>
+<script>
+(function () {
+  var TOKEN = 'live_b240a77b002cdcfbfb7907b4783'; // client-side token: public by design
+  var status = document.getElementById('checkout-status');
+
+  function say(msg) {
+    if (!status) return;
+    status.textContent = msg;
+    status.hidden = false;
+  }
+
+  if (!window.Paddle) {
+    // Script blocked or offline: the table still shows EUR list prices, and the
+    // buttons fall back to email rather than silently doing nothing.
+    degradeToEmail();
+    return;
+  }
+
+  Paddle.Initialize({ token: TOKEN });
+
+  // Localized prices: Paddle detects the customer's country and returns formatted
+  // totals, so there is no currency maths here.
+  var priceCells = Array.prototype.slice.call(document.querySelectorAll('.price[data-price-id]'));
+  if (priceCells.length && Paddle.PricePreview) {
+    Paddle.PricePreview({
+      items: priceCells.map(function (cell) {
+        return { priceId: cell.getAttribute('data-price-id'), quantity: 1 };
+      })
+    }).then(function (result) {
+      (result.data.details.lineItems || []).forEach(function (item) {
+        var cell = document.querySelector('.price[data-price-id="' + item.price.id + '"]');
+        if (cell && item.formattedTotals && item.formattedTotals.total) {
+          cell.textContent = item.formattedTotals.total;
+        }
+      });
+    }).catch(function () {
+      // Keep the EUR list prices already in the markup.
+    });
+  }
+
+  document.addEventListener('click', function (event) {
+    var button = event.target.closest('button.buy');
+    if (!button) return;
+    var priceId = button.getAttribute('data-price-id');
+    try {
+      Paddle.Checkout.open({
+        items: [{ priceId: priceId, quantity: 1 }],
+        settings: { displayMode: 'overlay', theme: 'dark', successUrl: 'https://deversity.se/pricing.html' }
+      });
+    } catch (e) {
+      say('Checkout could not be opened. Email isberg.peter@gmail.com and we will invoice you directly.');
+    }
+  });
+
+  function degradeToEmail() {
+    Array.prototype.slice.call(document.querySelectorAll('button.buy')).forEach(function (button) {
+      var link = document.createElement('a');
+      link.className = 'buy buy-link';
+      link.textContent = 'Email';
+      link.href = 'mailto:isberg.peter@gmail.com?subject=' +
+        encodeURIComponent('async-test-lib license: ' + button.getAttribute('data-tier'));
+      button.parentNode.replaceChild(link, button);
+    });
+  }
+})();
+</script>
 </body>
 </html>
