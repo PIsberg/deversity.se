@@ -57,7 +57,7 @@
       <tr>
         <td>OEM / redistribution</td>
         <td class="price">from &euro;10,000, negotiated</td>
-        <td class="buy-col"><a class="buy buy-link" href="mailto:isberg.peter@gmail.com?subject=async-test-lib%20OEM%20license">Email</a></td>
+        <td class="buy-col"><a class="buy buy-link" href="mailto:peter.isberg@deversity.se?subject=async-test-lib%20OEM%20license">Email</a></td>
       </tr>
     </tbody>
   </table>
@@ -80,7 +80,7 @@
 
   <p>Prices are shown in your local currency where Paddle supports it; you are charged the
   amount displayed at checkout. Prefer an invoice, a purchase order, or have a question first?
-  <a href="mailto:isberg.peter@gmail.com?subject=async-test-lib%20license">Email us</a>.</p>
+  <a href="mailto:peter.isberg@deversity.se?subject=async-test-lib%20license">Email us</a>.</p>
 
   <h2>Running without a license</h2>
   <p>Non-commercial use is free and needs no key. Developers on free email providers are
@@ -90,12 +90,12 @@
 </main>
 <footer class="site-foot">
   <div class="inner">
-    <span>&copy; 2026 Deversity, Sweden</span>
+    <span>&copy; 2026 Deversity AB (Org.nr 559303-2278), Sweden</span>
     <nav>
       <a href="terms.html">Terms</a>
       <a href="privacy.html">Privacy</a>
       <a href="refunds.html">Refunds</a>
-      <a href="mailto:isberg.peter@gmail.com">Contact</a>
+      <a href="mailto:peter.isberg@deversity.se">Contact</a>
     </nav>
   </div>
 </footer>
@@ -152,7 +152,7 @@
         settings: { displayMode: 'overlay', theme: 'dark', successUrl: 'https://deversity.se/pricing.html' }
       });
     } catch (e) {
-      say('Checkout could not be opened. Email isberg.peter@gmail.com and we will invoice you directly.');
+      say('Checkout could not be opened. Email peter.isberg@deversity.se and we will invoice you directly.');
     }
   });
 
@@ -161,7 +161,7 @@
       var link = document.createElement('a');
       link.className = 'buy buy-link';
       link.textContent = 'Email';
-      link.href = 'mailto:isberg.peter@gmail.com?subject=' +
+      link.href = 'mailto:peter.isberg@deversity.se?subject=' +
         encodeURIComponent('async-test-lib license: ' + button.getAttribute('data-tier'));
       button.parentNode.replaceChild(link, button);
     });
