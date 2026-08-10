@@ -16,12 +16,12 @@
 // To also accept PayPal: Paddle dashboard → Checkout → Payment methods → enable
 // PayPal. It then appears inside the same overlay. Nothing here changes.
 const PADDLE = {
-  token: 'PADDLE_CLIENT_TOKEN_UNSET',
+  token: 'live_b240a77b002cdcfbfb7907b4783',
   tiers: {
-    t1: { priceId: 'PADDLE_PRICE_ID_UNSET', label: '1 to 9 developers' },
-    t2: { priceId: 'PADDLE_PRICE_ID_UNSET', label: '10 to 49 developers' },
-    t3: { priceId: 'PADDLE_PRICE_ID_UNSET', label: '50 to 199 developers' },
-    t4: { priceId: 'PADDLE_PRICE_ID_UNSET', label: '200+ developers' },
+    t1: { priceId: 'pri_01kzpbz70xs8dg50tbqg84307j', label: '1 to 9 developers' },
+    t2: { priceId: 'pri_01kzpcawwhnvcq1n1h572fkams', label: '10 to 49 developers' },
+    t3: { priceId: 'pri_01kzpcdd2vvy853nws9np4040j', label: '50 to 199 developers' },
+    t4: { priceId: 'pri_01kzpcfr5hdy0v3hm1x80wcfj0', label: '200+ developers' },
   },
 };
 
@@ -145,6 +145,14 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function initPaddle() {
+    // Sandbox client tokens start with test_, live ones with live_. Deriving
+    // the environment from the token rather than a separate flag makes the two
+    // impossible to mismatch: a sandbox token cannot be pointed at the live
+    // catalogue, and a live token cannot be left talking to sandbox after a
+    // test run.
+    if (PADDLE.token.startsWith('test_') && Paddle.Environment) {
+      Paddle.Environment.set('sandbox');
+    }
     Paddle.Initialize({ token: PADDLE.token });
 
     // Show Paddle's localized prices where it can detect the visitor's country.
