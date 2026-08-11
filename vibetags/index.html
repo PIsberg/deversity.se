@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VibeTags — AI Guardrails for Java, Compiled From Your Code</title>
+  <meta name="description" content="VibeTags is a compile-time Java annotation processor that generates guardrail files for 37 AI coding tools — CLAUDE.md, .cursorrules, copilot-instructions and more — from annotations in your source. MIT licensed, zero runtime overhead.">
+  <meta name="keywords" content="VibeTags, AI guardrails, annotation processor, CLAUDE.md, cursorrules, AI coding tools, Java, Kotlin, AI safety, Claude Code, Cursor, Copilot">
+  <meta name="author" content="Peter Isberg">
+  <meta name="theme-color" content="#07070a">
+  <link rel="canonical" href="https://deversity.se/vibetags/">
+
+  <meta property="og:title" content="VibeTags — AI Guardrails for Java">
+  <meta property="og:description" content="Annotate once; every AI tool's guardrail file is regenerated on the next compile. 44 annotations, 37 platforms, zero runtime overhead. MIT licensed.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://deversity.se/vibetags/">
+  <meta name="twitter:card" content="summary">
+
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2307070a'/%3E%3Cpath d='M14 20l14 26L42 20' fill='none' stroke='%233ecf8e' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M40 34h12M46 28v12' stroke='%233ecf8e' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header id="site-header" class="header-root">
+    <div class="header-container">
+      <a href="./" class="logo-link">
+        <span class="logo-icon">@</span>
+        <span class="logo-text">Vibe<span class="logo-accent">Tags</span></span>
+      </a>
+      <nav class="nav-links">
+        <a href="#how" class="nav-item">How it works</a>
+        <a href="#features" class="nav-item">Features</a>
+        <a href="#platforms" class="nav-item">Platforms</a>
+        <a href="#setup" class="nav-item">Quick start</a>
+        <a href="#faq" class="nav-item">FAQ</a>
+      </nav>
+      <div class="header-actions">
+        <a href="https://github.com/PIsberg/vibetags" class="cta-button primary-cta">GitHub</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- Hero -->
+    <section class="hero-section" id="hero">
+      <div class="hero-container">
+        <div class="hero-content">
+          <p class="eyebrow">// compile-time annotation processor for the JVM</p>
+          <h1 class="hero-title">AI guardrails,<br><span class="hl">compiled from your code.</span></h1>
+          <p class="hero-subtitle">
+            <code>CLAUDE.md</code>, <code>.cursorrules</code> and their cousins are hand-edited,
+            drift per developer, and go stale the moment the code moves. VibeTags generates them
+            from annotations in your Java or Kotlin source — annotate once, and every AI tool's
+            guardrail file is regenerated on the next compile.
+          </p>
+          <div class="hero-actions">
+            <a href="#setup" class="cta-button primary-cta">Add it in 60 seconds</a>
+            <a href="https://github.com/PIsberg/vibetags" class="cta-button ghost-cta">View on GitHub</a>
+          </div>
+          <p class="hero-meta">MIT licensed &middot; zero runtime overhead &middot; Maven &amp; Gradle &middot; Java 21+</p>
+        </div>
+        <figure class="term" role="img" aria-label="Example: one annotation becomes guardrail entries for every AI tool">
+          <figcaption class="term-bar">
+            <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+            <span class="term-title">PaymentProcessor.java &rarr; mvn compile</span>
+            <span class="term-status">2 files updated</span>
+          </figcaption>
+          <pre class="term-code"><code><span class="ann">@AILocked</span>(reason = <span class="str">"Legacy payment integration — changes break production."</span>)
+<span class="kw">public interface</span> <span class="fn">PaymentProcessor</span> {
+    String processPayment(<span class="kw">double</span> amount, String currency);
+}</code></pre>
+          <div class="term-report">
+            <p class="rep-line ok"><span>&#x2713; CLAUDE.md</span><code>&lt;locked_files&gt;</code> entry written between VIBETAGS markers</p>
+            <p class="rep-line ok"><span>&#x2713; .cursorrules</span>DO-NOT-EDIT rule for <code>PaymentProcessor</code> regenerated</p>
+            <p class="rep-line dim"><span>&#x25CB; 35 more tools</span>each opted-in file updated on the same compile</p>
+          </div>
+        </figure>
+      </div>
+    </section>
+
+    <!-- Stats -->
+    <section class="stats-band" aria-label="Key facts">
+      <div><strong>44</strong><span>guardrail annotations</span></div>
+      <div><strong>37</strong><span>AI platforms</span></div>
+      <div><strong>49</strong><span>generated config files</span></div>
+      <div><strong>0</strong><span>runtime dependencies</span></div>
+    </section>
+
+    <!-- Problem -->
+    <section class="section" id="problem">
+      <div class="section-container">
+        <h2 class="section-title">Your AI config files are already stale</h2>
+        <div class="grid three">
+          <div class="card">
+            <h3>Hand-edited, per developer</h3>
+            <p>Each teammate curates their own <code>.cursorrules</code> and <code>CLAUDE.md</code>.
+            The rules that protect production code exist only on the machines of the people who
+            already know not to touch it.</p>
+          </div>
+          <div class="card">
+            <h3>Divorced from the code</h3>
+            <p>Rename a class and every guardrail that mentioned it now points at nothing. No
+            compiler checks a markdown file. Nothing fails. The rule just stops existing.</p>
+          </div>
+          <div class="card">
+            <h3>One file per tool, times N tools</h3>
+            <p>Claude, Cursor, Copilot, Gemini, Windsurf, a PR reviewer and a context packer:
+            the same intent, copy-pasted into a dozen formats, each drifting separately.</p>
+          </div>
+        </div>
+        <p class="section-punch">VibeTags moves the source of truth into the source:
+        guardrails are <em>derived from annotations</em>, regenerated on every compile,
+        and reviewed like any other code change.</p>
+      </div>
+    </section>
+
+    <!-- How it works -->
+    <section class="section" id="how">
+      <div class="section-container">
+        <h2 class="section-title">How it works</h2>
+        <div class="grid three steps">
+          <div class="card">
+            <span class="step-num">01</span>
+            <h3>Annotate</h3>
+            <p>Mark intent where it lives: <code>@AILocked</code> on the payment gateway,
+            <code>@AIPrivacy</code> on PII, <code>@AIContext</code> for focus and pitfalls,
+            <code>@AITestDriven</code> for enforce-the-tests. 44 annotations, all
+            <code>SOURCE</code> retention.</p>
+          </div>
+          <div class="card">
+            <span class="step-num">02</span>
+            <h3>Opt in by touching a file</h3>
+            <p>File presence is the opt-in: VibeTags only regenerates files that already exist,
+            and never creates one on its own. <code>touch CLAUDE.md .cursorrules</code> — or let
+            <code>vibetags init</code> do it.</p>
+          </div>
+          <div class="card">
+            <span class="step-num">03</span>
+            <h3>Compile</h3>
+            <p>Every opted-in file is rewritten between <code>VIBETAGS-START/END</code> markers.
+            Hand-written content around the markers is never touched. Commit the result;
+            the whole team and every tool see the same rules.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features -->
+    <section class="section" id="features">
+      <div class="section-container">
+        <h2 class="section-title">Built for real codebases</h2>
+        <div class="grid bento">
+          <div class="card">
+            <span class="tag">CONTEXT BUDGET</span>
+            <h3>Scoped rules keep always-on context slim</h3>
+            <p>Opt into a tool's rules directory (<code>.claude/rules/</code>,
+            <code>.cursor/rules/</code>, &hellip;) and the aggregate file collapses to an index:
+            safety-critical rules stay inline, per-element detail loads only when the matching
+            file is opened. The VibeTags repo dogfoods this — its own <code>CLAUDE.md</code>
+            block is 45 lines.</p>
+          </div>
+          <div class="card">
+            <span class="tag">CI</span>
+            <h3>Drift fails the build</h3>
+            <p>Check mode (<code>-Avibetags.check=true</code>) verifies every generated file
+            against the annotations and fails the compile when anything drifted — nothing is
+            written. The bundled GitHub Action fails any PR whose diff touches
+            <code>@AILocked</code> code.</p>
+          </div>
+          <div class="card">
+            <span class="tag">MULTI-MODULE</span>
+            <h3>Reactors merge safely</h3>
+            <p>Maven and Gradle multi-module builds merge per-module guardrails through
+            sidecars — modules compile independently, the root files stay consistent, and a
+            cold clone can't sweep another module's committed rules.</p>
+          </div>
+          <div class="card">
+            <span class="tag">KOTLIN</span>
+            <h3>Kotlin via kapt</h3>
+            <p>The annotations are plain Java annotations with <code>SOURCE</code> retention,
+            so they work on Kotlin classes and functions under kapt unchanged — asserted by a
+            dedicated consumer build in CI.</p>
+          </div>
+          <div class="card">
+            <span class="tag">TOOLING</span>
+            <h3>Companion CLI</h3>
+            <p><code>vibetags init</code> bootstraps the opt-in files;
+            <code>vibetags doctor</code> reports wiring, active platforms and marker integrity
+            with a CI-friendly exit code. The platform list is read from the processor, so the
+            CLI can't drift from it.</p>
+          </div>
+          <div class="card">
+            <span class="tag">TRUST</span>
+            <h3>Numbers a test enforces</h3>
+            <p>44 annotations, 37 platforms, 49 files: pinned by
+            <code>ProjectFactsConsistencyTest</code>. 1,546 tests, OpenSSF Best Practices
+            100%, fuzzing, mutation testing, three JDKs and three OSes in CI.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Platforms -->
+    <section class="section" id="platforms">
+      <div class="section-container">
+        <h2 class="section-title">One compile, every tool aligned</h2>
+        <p class="section-sub">Aggregate files, scoped-rule directories, ignore files and
+        machine-readable reports for the tools your team actually mixes:</p>
+        <ul class="logo-wall" aria-label="Supported AI platforms">
+          <li>Claude Code</li><li>Cursor</li><li>GitHub Copilot</li><li>Gemini CLI</li>
+          <li>Codex CLI</li><li>Windsurf</li><li>Zed</li><li>Cody</li><li>Aider</li>
+          <li>Cline</li><li>Roo Code</li><li>Trae</li><li>Qwen Code</li><li>JetBrains Junie</li>
+          <li>Amazon Q</li><li>Continue</li><li>Tabnine</li><li>Firebase Studio</li>
+          <li>CodeRabbit</li><li>PR-Agent</li><li>Ellipsis</li><li>Sweep</li>
+          <li>llms.txt</li><li>Repomix</li><li>gitingest</li><li>&hellip;and more</li>
+        </ul>
+        <p class="section-sub">The full table, with every generated file, is in the
+        <a href="https://github.com/PIsberg/vibetags#readme">repository README</a>.</p>
+      </div>
+    </section>
+
+    <!-- Quick start -->
+    <section class="section" id="setup">
+      <div class="section-container">
+        <h2 class="section-title">Quick start</h2>
+        <div class="setup-grid">
+          <div class="setup-block">
+            <h3>Maven</h3>
+            <pre class="code-block"><code>&lt;dependency&gt;
+  &lt;groupId&gt;se.deversity.vibetags&lt;/groupId&gt;
+  &lt;artifactId&gt;vibetags-annotations&lt;/artifactId&gt;
+  &lt;version&gt;1.0.4&lt;/version&gt;
+&lt;/dependency&gt;
+
+&lt;!-- processor on the annotation-processor path --&gt;
+&lt;annotationProcessorPaths&gt;
+  &lt;path&gt;
+    &lt;groupId&gt;se.deversity.vibetags&lt;/groupId&gt;
+    &lt;artifactId&gt;vibetags-processor&lt;/artifactId&gt;
+    &lt;version&gt;1.0.4&lt;/version&gt;
+  &lt;/path&gt;
+&lt;/annotationProcessorPaths&gt;</code></pre>
+          </div>
+          <div class="setup-block">
+            <h3>Gradle</h3>
+            <pre class="code-block"><code>dependencies {
+    compileOnly 'se.deversity.vibetags:vibetags-annotations:1.0.4'
+    annotationProcessor 'se.deversity.vibetags:vibetags-processor:1.0.4'
+}</code></pre>
+            <h3>Then opt in and compile</h3>
+            <pre class="code-block"><code># pick your tools (or: jbang se.deversity.vibetags:vibetags-cli:1.0.4 init --list)
+touch CLAUDE.md .cursorrules
+
+mvn compile   # or: gradle build</code></pre>
+          </div>
+        </div>
+        <p class="section-sub">The BOM, Kotlin/kapt setup, granular rules and check mode are in the
+        <a href="https://github.com/PIsberg/vibetags/blob/main/USAGE.md">usage guide</a>.</p>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="section" id="faq">
+      <div class="section-container">
+        <h2 class="section-title">Questions</h2>
+        <div class="faq-list">
+          <details>
+            <summary>Does it add anything to my runtime?</summary>
+            <p>No. Every annotation is <code>RetentionPolicy.SOURCE</code>: erased at compile
+            time, nothing in the class files, nothing on the runtime classpath. The processor
+            runs inside javac and only on your build machines.</p>
+          </details>
+          <details>
+            <summary>What happens to the parts of CLAUDE.md I wrote by hand?</summary>
+            <p>They survive. Generated content lives strictly between
+            <code>VIBETAGS-START</code>/<code>VIBETAGS-END</code> markers; everything outside is
+            yours and is never touched. Whole-file formats (JSON/TOML configs) are documented
+            as such.</p>
+          </details>
+          <details>
+            <summary>Will it start writing files I didn't ask for?</summary>
+            <p>No. File presence is the opt-in: the processor only regenerates files that
+            already exist, and deleting a file deactivates that platform. The one documented
+            exception: activating Codex also writes its sidecar config.</p>
+          </details>
+          <details>
+            <summary>Kotlin? KSP?</summary>
+            <p>Kotlin works under kapt (a CI-built example consumer proves it). KSP is not
+            supported — it does not run JSR&nbsp;269 processors. Class- and function-level
+            annotations work fully under kapt.</p>
+          </details>
+          <details>
+            <summary>Multi-module builds?</summary>
+            <p>Fully supported for Maven and Gradle reactors: per-module sidecars merge into
+            the root files, modules can opt into their own scoped output, and a lean indexed
+            root keeps the always-loaded context small. See the multi-module guide in the
+            repository.</p>
+          </details>
+          <details>
+            <summary>License?</summary>
+            <p>MIT — free for any use, commercial included. If it saves you time, the repo has
+            a donation link.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- Bottom CTA -->
+    <section class="section bottom-cta">
+      <div class="section-container center">
+        <h2 class="section-title">Stop repeating yourself to every AI tool</h2>
+        <div class="hero-actions center">
+          <a href="https://github.com/PIsberg/vibetags" class="cta-button primary-cta">Get VibeTags on GitHub</a>
+          <a href="https://central.sonatype.com/artifact/se.deversity.vibetags/vibetags-processor" class="cta-button ghost-cta">Maven Central</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-foot">
+    <div class="foot-inner">
+      <span>&copy; 2026 Deversity AB (Org.nr 559303-2278), Sweden &middot; VibeTags is MIT licensed</span>
+      <nav>
+        <a href="../">deversity.se</a>
+        <a href="https://github.com/PIsberg/vibetags">GitHub</a>
+        <a href="https://github.com/PIsberg/vibetags/blob/main/USAGE.md">Docs</a>
+        <a href="mailto:peter.isberg@deversity.se">Contact</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
