@@ -113,6 +113,26 @@
             <circle cx="12" cy="12" r="5"/>
           </svg>
         </div>
+        <div class="stats-row">
+          <div class="stat-item">
+            <span class="stat-number">100%</span>
+            <span class="stat-label">Attacks detected<br>110/110, heuristic + embedding stages</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number">0%</span>
+            <span class="stat-label">False positives<br>0/78 benign prompts</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number">95%</span>
+            <span class="stat-label">Recall on unseen attacks<br>1,071 real InjecAgent cases, never tuned on</span>
+          </div>
+        </div>
+        <p class="stats-caption">
+          Full methodology and held-out numbers:
+          <a href="https://github.com/PIsberg/llm-fw/blob/main/docs/SCORECARD.md" rel="noopener">Detection Scorecard</a>
+          &middot;
+          <a href="https://github.com/PIsberg/llm-fw/blob/main/docs/BENCHMARK.md" rel="noopener">Generalization Benchmark</a>
+        </p>
       </div>
     </section>
 
