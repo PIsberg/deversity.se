@@ -1,0 +1,165 @@
+/* Mutex, the homepage mascot. Loaded by index.html only; the behaviour lives in mascot.js. */
+
+.mx-root {
+  --mx-color: #e0895f;                 /* warm terracotta, so it reads as a character, not a control */
+  --mx-glow: rgba(224, 137, 95, 0.55);
+  --mx-size: 12px;                     /* one text cell; the whole body scales from this */
+  position: fixed;
+  inset: 0;
+  z-index: 60;                         /* above the sticky header (50) */
+  pointer-events: none;                /* only the body itself is clickable */
+  overflow: hidden;
+  font-family: var(--mono);
+}
+
+/* ---------- Body ---------- */
+
+.mx-body {
+  position: absolute;
+  left: 0;
+  top: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--mx-color);
+  cursor: grab;
+  pointer-events: auto;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-user-drag: none;
+  -webkit-tap-highlight-color: transparent;
+  will-change: transform;
+  line-height: 1;
+}
+.mx-body:active { cursor: grabbing; }
+.mx-body:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 5px;
+  border-radius: 10px;
+}
+
+.mx-squash {
+  display: block;
+  transform-origin: 50% 100%;          /* squash from the feet, so landings look planted */
+  will-change: transform;
+}
+
+.mx-glyph {
+  display: block;
+  margin: 0;
+  font: 700 var(--mx-size) / 1 var(--mono);
+  letter-spacing: 0;
+  white-space: pre;
+  text-shadow: 0 0 2px var(--mx-glow), 0 0 12px var(--mx-glow);
+  transform-origin: 50% 50%;           /* it rolls around its centre */
+  will-change: transform;
+}
+
+/* ---------- Speech bubble ---------- */
+
+.mx-bubble {
+  position: absolute;
+  left: 0;
+  top: 0;
+  max-width: min(270px, calc(100vw - 24px));
+  padding: 8px 11px;
+  font: 0.78rem / 1.45 var(--mono);
+  color: var(--ink);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  background: rgba(15, 23, 34, 0.97);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+  opacity: 0;
+  transition: opacity 0.18s ease;
+  will-change: transform;
+}
+.mx-bubble.on { opacity: 1; }
+.mx-bubble::after {                    /* tail; --mx-tail is set from JS so it keeps pointing at the body */
+  content: "";
+  position: absolute;
+  left: var(--mx-tail, 50%);
+  bottom: -6px;
+  width: 10px;
+  height: 10px;
+  background: inherit;
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  transform: translateX(-50%) rotate(45deg);
+}
+.mx-bubble.below::after {
+  bottom: auto;
+  top: -6px;
+  transform: translateX(-50%) rotate(225deg);
+}
+.mx-caret {
+  display: inline-block;
+  width: 0.55em;
+  margin-left: 1px;
+  color: var(--mx-color);
+  animation: mx-blink 0.9s steps(1) infinite;
+}
+.mx-caret[hidden] { display: none; }
+@keyframes mx-blink { 50% { opacity: 0; } }
+
+/* ---------- Dismiss ---------- */
+
+.mx-close {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--panel-2);
+  color: var(--muted);
+  font: 700 11px / 16px var(--mono);
+  text-align: center;
+  cursor: pointer;
+  pointer-events: auto;
+  opacity: 0;
+  visibility: hidden;                  /* not just transparent: an invisible target next to the body would dismiss on a stray click */
+  transition: opacity 0.15s ease, visibility 0s linear 0.15s;
+  will-change: transform;
+}
+.mx-root.mx-hover .mx-close,
+.mx-root:focus-within .mx-close { opacity: 1; visibility: visible; transition-delay: 0s; }
+.mx-close:hover { color: var(--ink); border-color: var(--faint); }
+
+/* ---------- Text particles ---------- */
+
+.mx-p {
+  position: absolute;
+  left: 0;
+  top: 0;
+  font: 700 12px / 1 var(--mono);
+  color: var(--mx-color);
+  will-change: transform, opacity;
+}
+
+/* ---------- Screen readers ---------- */
+
+.mx-live {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+  .mx-root { --mx-size: 11px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mx-bubble, .mx-close { transition: none; }
+  .mx-caret { animation: none; }
+}
