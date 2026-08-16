@@ -1,4 +1,4 @@
-/* Mutex, the homepage mascot. Loaded by index.html only; the behaviour lives in mascot.js. */
+/* Heisenbug, the homepage mascot. Loaded by index.html only; the behaviour lives in mascot.js. */
 
 .mx-root {
   --mx-color: #e0895f;                 /* warm terracotta, so it reads as a character, not a control */
@@ -53,7 +53,7 @@
   letter-spacing: 0;
   white-space: pre;
   text-shadow: 0 0 2px var(--mx-glow), 0 0 12px var(--mx-glow);
-  transform-origin: 50% 50%;           /* it rolls around its centre */
+  transform-origin: 50% 50%;           /* it spins around its centre */
   will-change: transform;
 }
 
