@@ -1,9 +1,10 @@
-/* Mutex, the Deversity homepage mascot.
+/* Heisenbug, the Deversity homepage mascot.
 
-   A starburst drawn from five text characters (- | / \ *) that rolls along the
-   page's own elements, rides them while you scroll, reacts to the cursor, can be
-   picked up and thrown, and says things about async-test-lib. Vanilla JS, no
-   build step, no dependencies. index.html is the only page that loads it.
+   A small bug drawn entirely from text (antennae, two eyes, a beetle body and six
+   legs in a 5x7 monospace grid) that scuttles along the page's own elements, rides
+   them while you scroll, reacts to the cursor, can be picked up and thrown, and
+   says things about async-test-lib. Vanilla JS, no build step, no dependencies.
+   index.html is the only page that loads it.
 
    Everything it says lives in the QUIPS block at the top. Every number in there
    was checked against the async-test-lib source at v1.9.3 (DetectorType has 135
@@ -16,8 +17,8 @@
 (() => {
   'use strict';
 
-  const NAME = 'Mutex';
-  const DISMISS_KEY = 'mutex:dismissed';
+  const NAME = 'Heisenbug';
+  const DISMISS_KEY = 'heisenbug:dismissed';
 
   // ---------------------------------------------------------------------------
   // Words
@@ -79,49 +80,49 @@
     // About itself and how to play with it.
     meta: [
       'Click me for a fact. Drag me if you must. Throw me and I will forgive you.',
-      'I am made of five characters: - | / \\ and *. That is the entire art budget.',
-      'Try scrolling. I will hang on to whatever I am standing on.',
-      'I roll instead of walking. Asterisks do not have feet. I checked.',
-      'The page says 100+ detectors. The enum says 135. Both are true, one is modest.',
-      'Mutex is short for mutual exclusion. Only one of me can hold the lock at a time, which is why there is one of me.',
-      'If I am ever in your way, move the mouse at me quickly. I startle easily.',
-      'Nothing here is an image. Look closer, it is all text. Even me.',
+      'I am a concurrency bug. async-test-lib forced me out of hiding, and now I live on the homepage as a warning to the others.',
+      'A Heisenbug vanishes when you look at it. Move the mouse at me quickly and watch.',
+      'Try scrolling. Six legs. I hold on.',
+      'The page says 100+ detectors. The enum says 135. One of them found me.',
+      'Six legs, two antennae, one line down the back. All of it typed. Nothing here is an image, not even me.',
+      'Insects have six legs. Spiders have eight and better PR.',
+      'If I am ever in your way, move the mouse at me quickly. I startle easily. It is in the name.',
     ],
-    hello:   ['hello.', 'hi there.', 'oh, hi.', 'you found me.', 'yes?', '*wiggles*'],
-    curious: ['what are you looking at?', 'reading? me too.', 'is that a cursor. hello, cursor.', 'I will just stand here.', 'hm.'],
-    flee:    ['whoa.', 'too fast!', 'eep.', 'personal space!', 'I said hello, not tag.'],
-    grabbed: ['hey.', 'put me down. or do not. your call.', 'ok. we are doing this.', 'I can see the whole page from here.'],
-    thrown:  ['wheeee.', 'airborne. legally distinct from a virtual thread.', 'that was rude and I loved it.', 'physics!', 'again. again.'],
+    hello:   ['hello.', 'hi there.', 'oh, hi.', 'you found me. that is the whole problem with me.', 'yes?', '*antennae twitch*'],
+    curious: ['what are you looking at?', 'reading? me too.', 'is that a cursor. hello, cursor.', 'I will just stand here.', 'hm.', '*waves antennae*'],
+    flee:    ['whoa.', 'too fast!', 'eep.', 'personal space!', 'you looked. I vanish. It is what I do.', 'I said hello, not tag.'],
+    grabbed: ['hey.', 'put me down. or do not. your call.', 'ok. we are doing this.', 'I can see the whole page from here.', 'six legs and none of them touching anything.'],
+    thrown:  ['wheeee.', 'airborne. not my strongest skill.', 'that was rude and I loved it.', 'physics!', 'again. again.', 'I have wings, technically. Never learned.'],
     dropped: ['thank you.', 'new spot. I like it.', 'fine.', 'delivered.'],
-    landed:  ['oof.', '*bounces*', 'stuck the landing.', 'ow.', '10/10 landing.'],
-    wake:    ['oh. hello.', 'I was resting my spokes.', 'not sleeping. thinking.', 'hm? yes. detectors. 135.'],
+    landed:  ['oof.', '*bounces*', 'stuck the landing.', 'ow.', '10/10 landing.', 'on my feet. all six.'],
+    wake:    ['oh. hello.', 'I was resting my legs. all six.', 'not sleeping. thinking.', 'hm? yes. detectors. 135.'],
     sleep:   ['z z z', 'z z z . . .', 'z z z  (dreaming of deadlocks)'],
-    bye:     ['ok. bye. I will be in the code.', 'releasing the lock. bye.', 'fine. unlocking. goodbye.'],
-    scroll:  ['you scroll fast. I hold on tight.', 'wheee. scrolling.', 'hold on.'],
+    bye:     ['ok. bye. back into hiding.', 'fine. vanishing. very on brand.', 'ok. I know a good crack in the footer. bye.'],
+    scroll:  ['you scroll fast. six legs, holding on.', 'wheee. scrolling.', 'hold on.'],
     milestone: (n) => [
       n + ' clicks. That is more contention than most tests get.',
       n + ' clicks. I am starting to think you are the race condition.',
-      n + '. Still not thread-safe. Still here.',
+      n + '. Still a bug. Still here.',
       n + ' clicks and no deadlock. Suspicious.',
     ],
-    greeting: 'Hi. I am ' + NAME + '. I hold the lock on this page.',
+    greeting: 'Hi. I am ' + NAME + '. I was forced out of hiding and now I live here.',
   };
 
   // Said sometimes when it lands on one of these. First match wins.
   const ON_PLATFORM = [
-    ['.cat-race',   ['Race conditions. The one kind of race I do not enter.', 'This card is about lost updates. I have lost nothing. Yet.']],
-    ['.cat-lock',   ['Deadlocks. Two threads, each holding what the other needs. A bad handshake, forever.', 'I am named Mutex and I am standing on the deadlock card. Nobody panic.']],
+    ['.cat-race',   ['Race conditions. My cousins. We do not talk.', 'This card is about lost updates. I have lost nothing. Yet.']],
+    ['.cat-lock',   ['Deadlocks. Two threads, each holding what the other needs. A bad handshake, forever.', 'A bug standing on the deadlock card. Nobody panic.']],
     ['.cat-signal', ['Missed signals. A notify with nobody waiting is a tree falling in an empty forest.', 'This card is about waits that never wake. Relatable, on Mondays.']],
     ['.cat-pub',    ['Unsafe publication. An object seen before it is finished. Like reading a draft.', 'Standing on the publication card. Fully constructed, I promise.']],
     ['.card.hot',   ['The commercial card. It covers everyone on your email domain. No per-seat keys. I asked.']],
-    ['.term',       ['This terminal shows two findings. Real ones look just like that.', '8 threads, 500 rounds, two findings. Nice view from up here.']],
+    ['.term',       ['This terminal shows two findings. I was going to be the third.', '8 threads, 500 rounds, two findings. Nice view from up here.']],
     ['.cta',        ['I am standing on the pricing button. That is not an endorsement. OK, it is.', 'This button leads to pricing. I am not blocking it. Much.']],
     ['.ghost',      ['This one goes to GitHub. The code is in there. So am I, in a sense.']],
-    ['.stats',      ['Three stats and a strip to stand on. Sturdy.', 'N times M, all forced to collide. I just stand here and roll.']],
-    ['.site-foot',  ['This is the footer. Everything below is the void. And a copyright line.', 'End of the page. I will wait here.']],
+    ['.stats',      ['Three stats and a strip to stand on. Sturdy.', 'N times M, all forced to collide. I just stand here and wave my antennae.']],
+    ['.site-foot',  ['This is the footer. Everything below is the void. And a copyright line.', 'End of the page. Good place for a bug. I will wait here.']],
     ['h2',          ['Section heading. Good view.', 'Standing on a heading. It is a very stable heading.']],
   ];
-  const ON_FLOOR = ['Ground floor. Everybody off.', 'I fell off the page and landed on your screen. It happens.'];
+  const ON_FLOOR = ['Ground floor. Everybody off.', 'I fell off the page and landed on your screen. It happens.', 'A bug on the floor. Traditional.'];
 
   // ---------------------------------------------------------------------------
   // Setup
@@ -135,7 +136,7 @@
 
   const GRAVITY = 1500;      // px/s^2
   const MAX_FALL = 1100;     // px/s
-  const ROLL_STEP = 11;      // px of travel per 45 degree tumble of the spokes
+  const STEP = 6;           // px of travel per frame of the walk cycle
 
   const rand = (a, b) => a + Math.random() * (b - a);
   const clamp = (v, lo, hi) => v < lo ? lo : v > hi ? hi : v;
@@ -201,53 +202,56 @@
   root.append(body, bubble, closeBtn, live);
 
   // ---------------------------------------------------------------------------
-  // The glyph: eight spokes rendered into a text grid
+  // The glyph: a top-down bug in a 7x5 text grid
+  //
+  //     \ /      antennae   up | alert | droop | twitchL | twitchR
+  //    (o o)     eyes       three characters between the parentheses
+  //   -(   )-    legs       one pair per row: rest, a 4-frame walk cycle, splayed in the air
+  //   -( | )-
+  //   -(_|_)-
   // ---------------------------------------------------------------------------
 
-  const RY = 2, RX = 3;   // cells of reach up/down and left/right; text cells are taller than wide
-  //             dr  dc  char  reach
-  const SPOKES = [
-    [-1,  0, '|',  RY],   // N
-    [-1,  1, '/',  RY],   // NE
-    [ 0,  1, '-',  RX],   // E
-    [ 1,  1, '\\', RY],   // SE
-    [ 1,  0, '|',  RY],   // S
-    [ 1, -1, '/',  RY],   // SW
-    [ 0, -1, '-',  RX],   // W
-    [-1, -1, '\\', RY],   // NW
-  ];
-  // Uneven on purpose. A hand-drawn asterisk has no two spokes alike, and the
-  // unevenness is what makes the tumble visible when the array rotates.
-  const BASE_EXT = [1, 0.5, 1, 1, 0.5, 1, 0.65, 0.5];
-  let ext = BASE_EXT.slice();
-  let centre = '*';
+  const ANTENNAE = { up: '\\ /', alert: '| |', droop: '. .', twitchL: '| /', twitchR: '\\ |' };
+  const BODY = ['(   )', '( | )', '(_|_)'];
+  //                     row2      row3      row4        (left, right) per body row
+  const LEGS = {
+    rest:  [['-', '-'], ['-', '-'], ['-', '-']],
+    walk0: [['/', '\\'], ['\\', '/'], ['/', '\\']],
+    walk1: [['-', '-'], ['-', '-'], ['-', '-']],
+    walk2: [['\\', '/'], ['/', '\\'], ['\\', '/']],
+    walk3: [['-', '-'], ['-', '-'], ['-', '-']],
+    air:   [['\\', '/'], ['-', '-'], ['/', '\\']],
+  };
+  const EYES = { open: 'o o', right: ' oo', left: 'oo ', wide: 'O O', shut: '- -', ouch: '> <', dizzy: '@ @', happy: '^ ^' };
+
+  let antennae = 'up', eyes = 'o o', legs = 'rest';
+  let walkFrame = 0;
   let glyphDirty = true;
 
   function renderGlyph() {
-    const rows = [];
-    for (let r = 0; r < 2 * RY + 1; r++) rows.push(new Array(2 * RX + 1).fill(' '));
-    rows[RY][RX] = centre;
-    for (let i = 0; i < SPOKES.length; i++) {
-      const [dr, dc, ch, reach] = SPOKES[i];
-      const n = Math.max(1, Math.round(clamp(ext[i], 0, 1) * reach));
-      for (let k = 1; k <= n; k++) rows[RY + dr * k][RX + dc * k] = ch;
-    }
-    return rows.map((r) => r.join('')).join('\n');
+    const l = LEGS[legs] || LEGS.rest;
+    return [
+      '  ' + (ANTENNAE[antennae] || ANTENNAE.up) + '  ',
+      ' (' + eyes + ') ',
+      l[0][0] + BODY[0] + l[0][1],
+      l[1][0] + BODY[1] + l[1][1],
+      l[2][0] + BODY[2] + l[2][1],
+    ].join('\n');
   }
-  function setCentre(c) { if (centre !== c) { centre = c; glyphDirty = true; } }
-  function setExt(next) { ext = next; glyphDirty = true; }
-  function tumble(dir) {              // rotate the spoke lengths by 45 degrees
-    const n = ext.slice();
-    for (let i = 0; i < n.length; i++) n[i] = ext[(i - dir + n.length) % n.length];
-    setExt(n);
+  function setEyes(e) { if (eyes !== e) { eyes = e; glyphDirty = true; } }
+  function setAntennae(a) { if (antennae !== a) { antennae = a; glyphDirty = true; } }
+  function setLegs(l) { if (legs !== l) { legs = l; glyphDirty = true; } }
+  function stepLegs() {               // one frame of the tripod gait
+    walkFrame = (walkFrame + 1) % 4;
+    setLegs('walk' + walkFrame);
   }
-  function jitter(amount) {           // the hand-drawn wobble
-    const n = ext.slice();
-    const i = Math.floor(Math.random() * n.length);
-    n[i] = clamp(BASE_EXT[i] + rand(-amount, amount), 0.3, 1);
-    setExt(n);
+  let restoreEyes = 'o o', eyesUntil = 0, antennaeUntil = 0;
+  function blink(now) { restoreEyes = eyes; setEyes(EYES.shut); eyesUntil = now + 110; }
+  function twitch(now) { setAntennae(Math.random() < 0.5 ? 'twitchL' : 'twitchR'); antennaeUntil = now + 140; }
+  function faceTick(now) {            // ends a blink or a twitch when its time is up
+    if (eyesUntil && now > eyesUntil) { eyesUntil = 0; setEyes(restoreEyes); }
+    if (antennaeUntil && now > antennaeUntil) { antennaeUntil = 0; setAntennae(mode === 'sleep' ? 'droop' : 'up'); }
   }
-  function stretch(all) { setExt(BASE_EXT.map(() => all)); }
 
   // ---------------------------------------------------------------------------
   // State
@@ -264,8 +268,8 @@
   let spin = null;                        // {from, to, t0, dur} eased spin, used by clicks
   let bob = 0, walkPhase = 0;
   let sx = 1, sy = 1;                     // squash and stretch, eased back to 1
-  let rollAcc = 0;
-  let nextJitter = 0, wiggleUntil = 0, surprisedUntil = 0;
+  let stepAcc = 0;
+  let nextBlink = 0, nextTwitch = 0, wiggleUntil = 0, surprisedUntil = 0;
   let clicks = 0, landedOnce = false;
   let nextQuipAt = 0, platQuipCooldown = 0, greetCooldown = 0, fleeCooldown = 0, landQuipCooldown = 0, scrollQuipCooldown = 0;
   let curiousUntil = 0, avoidUntil = 0, avoidDir = 1;
@@ -425,7 +429,8 @@
     vy = upSpeed;
     vx = sideSpeed;
     sx = 0.8; sy = 1.25;
-    stretch(1);
+    setLegs('air');
+    if (!surprisedUntil) setEyes(EYES.open);
   }
 
   function land(onPlat, hard) {
@@ -434,13 +439,16 @@
     plat = onPlat;
     vy = 0;
     vx = 0;
+    const dizzy = Math.abs(omega) > 500;         // came down spinning: it was thrown
     omega = 0;
     theta = ((theta % 360) + 540) % 360 - 180;   // spin back to upright the short way
     spin = { from: theta, to: 0, t0: now, dur: 380 };
     sx = hard ? 1.35 : 1.15;
     sy = hard ? 0.62 : 0.85;
-    setExt(BASE_EXT.slice());
-    setCentre('*');
+    setLegs('rest');
+    setAntennae('up');
+    setEyes(dizzy ? EYES.dizzy : hard ? EYES.ouch : EYES.open);
+    if (dizzy || hard) { surprisedUntil = now + (dizzy ? 1500 : 700); }
     if (plat) y = platTop(plat) - h;
     nextDecision = now + (hard ? 900 : rand(300, 1400));
     walking = false;
@@ -466,7 +474,8 @@
     const cx = x + w / 2;
     const dir = ptr.x > cx ? -1 : 1;
     jump(-380, dir * 340);
-    setCentre('o');
+    setEyes(EYES.wide);
+    setAntennae('alert');
     surprisedUntil = now + 800;
     fleeCooldown = now + 3500;
     curiousUntil = 0;
@@ -488,14 +497,15 @@
     else text = asked.next();
     say(text, { priority: 5, live: true });   // asked for directly, so it outranks whatever it was saying
     if (fromKeyboard || reduceMotion) return;
-    setCentre('+');
-    surprisedUntil = now + 500;
+    setEyes(EYES.happy);
+    surprisedUntil = now + 900;
   }
 
   function wake(now) {
     mode = 'stand';
-    setCentre('*');
-    setExt(BASE_EXT.slice());
+    setEyes(EYES.wide);
+    setAntennae('alert');
+    surprisedUntil = now + 600;
     lastActivity = now;
     hush();
     jump(-330, 0);
@@ -529,7 +539,9 @@
       vy = (ny - y) / Math.max(dt, 1e-3);
       x = nx; y = ny;
       theta += (clamp(vx * 0.05, -32, 32) - theta) * Math.min(1, dt * 10);
-      if (Math.abs(vx) + Math.abs(vy) > 40) { rollAcc += Math.hypot(vx, vy) * dt; while (rollAcc > ROLL_STEP * 2) { rollAcc -= ROLL_STEP * 2; jitter(0.4); } }
+      // legs scrabble in the air while it is carried
+      if (Math.abs(vx) + Math.abs(vy) > 40) { stepAcc += Math.hypot(vx, vy) * dt; while (stepAcc > STEP * 2) { stepAcc -= STEP * 2; stepLegs(); } }
+      else setLegs('air');
     } else if (mode === 'gone') {
       vy += GRAVITY * 0.35 * dt;
       x += facing * 460 * dt;
@@ -547,9 +559,7 @@
       else if (x > vw - w) { x = vw - w; vx = -vx * 0.55; omega = -omega; }
       // the header is a ceiling, but only for things moving up: the entrance falls in from above it
       if (y < ceilY && vy < 0) { y = ceilY; vy = -vy * 0.3; }
-      // tumble in the air
-      rollAcc += Math.abs(vx) * dt;
-      while (rollAcc > ROLL_STEP * 1.5) { rollAcc -= ROLL_STEP * 1.5; tumble(vx >= 0 ? 1 : -1); }
+      setLegs('air');
       // landing: the highest platform edge crossed by the feet this frame, else the floor
       if (vy > 0) {
         const feet = y + h, cx = x + w / 2;
@@ -582,15 +592,18 @@
         const [lo, hi] = standRange();
         if (walking) {
           x += facing * speed * dt;
-          rollAcc += speed * dt;
-          while (rollAcc > ROLL_STEP) { rollAcc -= ROLL_STEP; tumble(facing); }
-          walkPhase += dt * speed / 7;
-          bob = -Math.abs(Math.sin(walkPhase)) * 3.5;
+          stepAcc += speed * dt;
+          while (stepAcc > STEP) { stepAcc -= STEP; stepLegs(); }
+          walkPhase += dt * speed / 5;
+          bob = -Math.abs(Math.sin(walkPhase)) * 2;
+          if (!surprisedUntil && !eyesUntil) setEyes(facing > 0 ? EYES.right : EYES.left);
           if (x < lo) { x = lo; atEdge(-1, now); }
           else if (x > hi) { x = hi; atEdge(1, now); }
         } else {
           bob += (Math.sin(now / 650) * 0.9 - bob) * Math.min(1, dt * 6);
           if (x < lo || x > hi) { x = clamp(x, lo, hi); }
+          setLegs('rest');
+          if (!surprisedUntil && !eyesUntil && now >= curiousUntil) setEyes(EYES.open);
         }
         x = clamp(x, 0, vw - w);
       }
@@ -615,13 +628,14 @@
       if (p >= 1) { theta = spin.to % 360; spin = null; }
     }
     if (mode !== 'air' && mode !== 'drag' && !spin) theta += (0 - theta) * Math.min(1, dt * 8);
-    if (surprisedUntil && now > surprisedUntil) { surprisedUntil = 0; if (mode !== 'sleep') setCentre('*'); }
+    if (surprisedUntil && now > surprisedUntil) { surprisedUntil = 0; if (mode !== 'sleep') { setEyes(EYES.open); setAntennae('up'); } }
 
-    // hand-drawn wobble, faster when wiggling
-    if (now > nextJitter) {
-      if (now < wiggleUntil) { jitter(0.5); theta = Math.sin(now / 40) * 12; nextJitter = now + 55; }
-      else if (mode === 'sleep') { nextJitter = now + 900; }
-      else { jitter(0.35); nextJitter = now + rand(240, 520); }
+    // small life: blinks, antenna twitches, and a whole-body wiggle when petted
+    faceTick(now);
+    if (now < wiggleUntil) { theta = Math.sin(now / 40) * 12; if (now > nextTwitch) { twitch(now); nextTwitch = now + 160; } }
+    else if (mode !== 'sleep') {
+      if (now > nextBlink) { if (!surprisedUntil) blink(now); nextBlink = now + rand(2500, 6000); }
+      if (now > nextTwitch) { if (!surprisedUntil) twitch(now); nextTwitch = now + rand(1500, 4500); }
     }
   }
 
@@ -688,7 +702,7 @@
     // an idle cursor nearby is worth a look
     if (now < curiousUntil) {
       if (Math.abs(dx) > 46) { walking = true; facing = dx > 0 ? 1 : -1; speed = 62; }
-      else walking = false;
+      else { walking = false; if (!surprisedUntil && !eyesUntil) setEyes(dx > 8 ? EYES.right : dx < -8 ? EYES.left : EYES.open); }
       return;
     }
     if (d < 260 && Math.abs(dy) < 170 && pspeed < 60 && sinceMove > 500 && !ptr.overLink && Math.random() < dt * 0.3) {
@@ -702,8 +716,9 @@
     if (now - lastActivity > 75000) {
       mode = 'sleep';
       walking = false;
-      setCentre('z');
-      setExt(BASE_EXT.map((e) => Math.max(0.3, e - 0.5)));
+      setEyes(EYES.shut);
+      setAntennae('droop');
+      setLegs('rest');
       nextSnore = now + 800;
     }
   }
@@ -815,7 +830,7 @@
     if (!drag.moved) {
       if (Math.hypot(e.clientX - drag.sx, e.clientY - drag.sy) < 6) return;
       drag.moved = true;
-      if (mode === 'sleep') { setCentre('*'); setExt(BASE_EXT.slice()); }
+      setEyes(EYES.wide); setAntennae('alert'); surprisedUntil = now + 800;   // picked up: eyes go wide, asleep or not
       mode = reduceMotion ? 'stand' : 'drag';
       plat = null; walking = false; spin = null; hush();
       if (!reduceMotion) say(pick(QUIPS.grabbed), { priority: 4, hold: 1500 });
@@ -850,7 +865,7 @@
     vy = clamp(tvy, -1300, 900);
     omega = clamp(vx * 1.1, -1400, 1400);
     const fast = Math.hypot(vx, vy) > 520;
-    if (fast) { setCentre('o'); surprisedUntil = now + 900; say(pick(QUIPS.thrown), { priority: 4 }); }
+    if (fast) { setEyes(EYES.wide); setAntennae('alert'); surprisedUntil = now + 900; say(pick(QUIPS.thrown), { priority: 4 }); }
     else if (Math.random() < 0.6) say(pick(QUIPS.dropped), { priority: 0, hold: 1500 });
   }
   body.addEventListener('pointerup', (e) => endDrag(e, false));
