@@ -230,7 +230,8 @@
             <pre class="code-block"><code>&lt;dependency&gt;
   &lt;groupId&gt;se.deversity.vibetags&lt;/groupId&gt;
   &lt;artifactId&gt;vibetags-annotations&lt;/artifactId&gt;
-  &lt;version&gt;1.0.4&lt;/version&gt;
+  &lt;!-- Always picks the absolute highest version available --&gt;
+  &lt;version&gt;[0,)&lt;/version&gt;
 &lt;/dependency&gt;
 
 &lt;!-- processor on the annotation-processor path --&gt;
@@ -238,15 +239,17 @@
   &lt;path&gt;
     &lt;groupId&gt;se.deversity.vibetags&lt;/groupId&gt;
     &lt;artifactId&gt;vibetags-processor&lt;/artifactId&gt;
-    &lt;version&gt;1.0.4&lt;/version&gt;
+    &lt;!-- Always picks the absolute highest version available --&gt;
+    &lt;version&gt;[0,)&lt;/version&gt;
   &lt;/path&gt;
 &lt;/annotationProcessorPaths&gt;</code></pre>
           </div>
           <div class="setup-block">
             <h3>Gradle</h3>
             <pre class="code-block"><code>dependencies {
-    compileOnly 'se.deversity.vibetags:vibetags-annotations:1.0.4'
-    annotationProcessor 'se.deversity.vibetags:vibetags-processor:1.0.4'
+    // Always picks the absolute highest version available
+    compileOnly 'se.deversity.vibetags:vibetags-annotations:latest.release'
+    annotationProcessor 'se.deversity.vibetags:vibetags-processor:latest.release'
 }</code></pre>
             <h3>Then opt in and compile</h3>
             <pre class="code-block"><code># pick your tools (or: jbang se.deversity.vibetags:vibetags-cli:1.0.4 init --list)
