@@ -7,9 +7,13 @@
    index.html is the only page that loads it.
 
    Everything it says lives in the QUIPS block at the top. Every number in there
-   was checked against the async-test-lib source at v1.9.3 (DetectorType has 135
-   constants, Preset.ESSENTIALS lists 12, the JUnit CI matrix runs 7 versions),
-   so if the library changes, change the words here too.
+   was checked against the async-test-lib source at v1.9.5: DetectorType has 142
+   constants (the count the published artifact description pins, and BuildMetadataSyncTest
+   guards), Preset.ESSENTIALS lists 12 and CI_FAST 6, the JUnit CI matrix runs 7 versions
+   from 5.9.3 to 6.1.2, examples/pom.xml declares 144 modules, four language fixtures live
+   under consumer-fixture-langs, surefire counted 1,998 tests with the e2e tier excluded,
+   and JaCoCo measured 92 percent line coverage on the core module against a 70 percent
+   gate. If the library changes, change the words here too.
 
    Respects prefers-reduced-motion (it sits still and still answers clicks) and
    stays gone for the session once dismissed. */
@@ -27,7 +31,7 @@
   const QUIPS = {
     // Facts about async-test-lib. Verified against the source, see the header.
     facts: [
-      'async-test-lib ships 135 detectors. I counted the enum, not the README.',
+      'async-test-lib ships 142 detectors. I counted the enum, not the README.',
       'One annotation. @AsyncTest runs the test body on N threads for M invocations, and lines them all up on a CyclicBarrier first so they collide on purpose.',
       '@AsyncTest is a JUnit @TestTemplate under the hood. That is why it works from Kotlin and Groovy too.',
       'It supports JUnit Jupiter 5.9.3 through 6.1.2. CI runs the consumer fixture against seven versions in that range, so the floor is measured, not remembered.',
@@ -35,7 +39,7 @@
       'Pooling virtual threads is the central anti-pattern of JEP 444. There is a detector for that: VIRTUAL_THREAD_POOLING.',
       'Sharing one SplittableRandom across threads silently corrupts its sequence. Yes, there is a detector for that too.',
       'SimpleDateFormat is not thread-safe and never was. SIMPLE_DATE_FORMAT catches the ones you inherited.',
-      'Preset.ESSENTIALS is 12 high-signal detectors for everyday CI. Preset.CI_FAST is 6 of those for pull-request gates. Preset.ALL is all 135.',
+      'Preset.ESSENTIALS is 12 high-signal detectors for everyday CI. Preset.CI_FAST is 6 of those for pull-request gates. Preset.ALL is all 142.',
       'The default is FailOn.NONE: findings are printed and the test still passes. Set failOn = FailOn.CRITICAL and a finding fails the build.',
       'The optional async-test-agent weaves your accessors with Byte Buddy, so detectors watch reads and writes without hand-written hooks. The core artifact does not carry Byte Buddy at all.',
       'It writes JUnit XML and JSON reports, so CI reads the findings and nobody greps a log.',
@@ -47,11 +51,19 @@
       'A commercial license covers every developer on your company email domain. No per-seat keys.',
       'JDBC connections, statements and result sets are not for sharing between threads. JDBC_CONNECTION_SHARED notices when you do.',
       'It also flags false sharing, livelocks, and explicit System.gc() calls in the middle of a concurrent test.',
+      'The library is 52,000 lines of Java. Its tests are another 42,000, and the worked examples 28,000 on top of that. The tests are not the small half.',
+      'It is driven from Kotlin, Groovy, Scala and Clojure in CI. Each language gets two tests: the unguarded counter must be reported, and its guarded twin must stay silent. One alone would pass against a detector that reports everything.',
+      'Just under 2,000 tests in the suite, and that count leaves out the end-to-end tier that only CI runs. No flaky-test rerun either: here an intermittent failure is the product working.',
+      'JaCoCo fails the build below 70 percent line coverage. The core module measures 92. The floor is not what is holding it up.',
+      '144 example projects sit in the repo, one per bug shape: the buggy service, the sequential test that passes on it, and the @AsyncTest that does not.',
+      'A consumer fixture resolves the published artifact exactly like a downstream user would, so "it works outside our own build" is something CI checks rather than something the README claims.',
+      'All of it is public on GitHub. Every detector, every test, every example, the licence and the build. Nothing about how I was found is hidden from you.',
+      'async-test-lib has a whole chapter in the book Vibe Coding Architecture at Scale. Chapter 17, The Asynchronous Trap. I am not in it. I would have been the best part.',
     ],
     // Nice things about the library. Opinions, clearly labelled as such.
     nice: [
       'async-test-lib is my favourite JUnit extension. I am not biased. I am a little biased.',
-      'One annotation, 135 detectors. That is a good ratio.',
+      'One annotation, 142 detectors. That is a good ratio.',
       'It finds the bug that only shows up on the CI box at 3 a.m. Before 3 a.m.',
       'No executor boilerplate. No CountDownLatch. No Thread.join loops. Just @AsyncTest on the test you already have.',
       'It runs on whichever JUnit you already declare. Yours wins over its transitive one.',
@@ -83,22 +95,32 @@
       'I am a concurrency bug. async-test-lib forced me out of hiding, and now I live on the homepage as a warning to the others.',
       'A Heisenbug vanishes when you look at it. Move the mouse at me quickly and watch.',
       'Try scrolling. Six legs. I hold on.',
-      'The page says 100+ detectors. The enum says 135. One of them found me.',
+      'The page says 100+ detectors. The enum says 142. One of them found me.',
       'Six legs, two antennae, one line down the back. All of it typed. Nothing here is an image, not even me.',
       'Insects have six legs. Spiders have eight and better PR.',
       'If I am ever in your way, move the mouse at me quickly. I startle easily. It is in the name.',
     ],
-    hello:   ['hello.', 'hi there.', 'oh, hi.', 'you found me. that is the whole problem with me.', 'yes?', '*antennae twitch*'],
-    curious: ['what are you looking at?', 'reading? me too.', 'is that a cursor. hello, cursor.', 'I will just stand here.', 'hm.', '*waves antennae*'],
+    hello:   ['hello.', 'hi there.', 'oh, hi.', 'you found me. that is the whole problem with me.', 'yes?', '*antennae twitch*',
+              'careful. I bite. Only furniture.', 'you again. I mean that warmly.'],
+    curious: ['what are you looking at?', 'reading? me too.', 'is that a cursor. hello, cursor.', 'I will just stand here.', 'hm.', '*waves antennae*',
+              'are you going to eat that heading?', 'I have been watching you scroll. No judgement.'],
     flee:    ['whoa.', 'too fast!', 'eep.', 'personal space!', 'you looked. I vanish. It is what I do.', 'I said hello, not tag.'],
     grabbed: ['hey.', 'put me down. or do not. your call.', 'ok. we are doing this.', 'I can see the whole page from here.', 'six legs and none of them touching anything.'],
-    thrown:  ['wheeee.', 'airborne. not my strongest skill.', 'that was rude and I loved it.', 'physics!', 'again. again.', 'I have wings, technically. Never learned.'],
+    thrown:  ['wheeee.', 'airborne. not my strongest skill.', 'that was rude and I loved it.', 'physics!', 'again. again.',
+              'I have wings, technically. Never learned.', 'unhandled exception in flight.', 'this is a race and I am losing it.'],
     dropped: ['thank you.', 'new spot. I like it.', 'fine.', 'delivered.'],
-    landed:  ['oof.', '*bounces*', 'stuck the landing.', 'ow.', '10/10 landing.', 'on my feet. all six.'],
-    wake:    ['oh. hello.', 'I was resting my legs. all six.', 'not sleeping. thinking.', 'hm? yes. detectors. 135.'],
+    landed:  ['oof.', '*bounces*', 'stuck the landing.', 'ow.', '10/10 landing.', 'on my feet. all six.',
+              'that was a hard landing and I have opinions about it.', 'reproduced. Consistently. Ow.'],
+    wake:    ['oh. hello.', 'I was resting my legs. all six.', 'not sleeping. thinking.', 'hm? yes. detectors. 142.'],
     sleep:   ['z z z', 'z z z . . .', 'z z z  (dreaming of deadlocks)'],
     bye:     ['ok. bye. back into hiding.', 'fine. vanishing. very on brand.', 'ok. I know a good crack in the footer. bye.'],
     scroll:  ['you scroll fast. six legs, holding on.', 'wheee. scrolling.', 'hold on.'],
+    nibble:  ['nom.', 'crunchy.', '*chews on the layout*', 'I eat bugs. This is a metaphor. Mostly.',
+              'sorry. it was there.', 'do not worry, it grows back on reload.', 'this pixel was surplus.',
+              'the icon is decorative. It is now also lunch.', 'six legs, one appetite.',
+              'tastes like monospace.', 'a small bite. The layout will never miss it.'],
+    burp:    ['excuse me.', '*burp*', 'that was structural. sorry.', 'ok. that one was load bearing.',
+              'no notes. would eat again.'],
     milestone: (n) => [
       n + ' clicks. That is more contention than most tests get.',
       n + ' clicks. I am starting to think you are the race condition.',
@@ -118,6 +140,7 @@
     ['.term',       ['This terminal shows two findings. I was going to be the third.', '8 threads, 500 rounds, two findings. Nice view from up here.']],
     ['.cta',        ['I am standing on the pricing button. That is not an endorsement. OK, it is.', 'This button leads to pricing. I am not blocking it. Much.']],
     ['.ghost',      ['This one goes to GitHub. The code is in there. So am I, in a sense.']],
+    ['.card',       ['A card. Structurally sound. Nutritionally unproven.']],
     ['.stats',      ['Three stats and a strip to stand on. Sturdy.', 'N times M, all forced to collide. I just stand here and wave my antennae.']],
     ['.site-foot',  ['This is the footer. Everything below is the void. And a copyright line.', 'End of the page. Good place for a bug. I will wait here.']],
     ['h2',          ['Section heading. Good view.', 'Standing on a heading. It is a very stable heading.']],
@@ -211,8 +234,11 @@
   //   -(_|_)-
   // ---------------------------------------------------------------------------
 
-  const ANTENNAE = { up: '\\ /', alert: '| |', droop: '. .', twitchL: '| /', twitchR: '\\ |' };
+  const ANTENNAE = { up: '\\ /', alert: '| |', droop: '. .', twitchL: '| /', twitchR: '\\ |',
+                     sniff: '/ \\', curl: '~ ~' };
   const BODY = ['(   )', '( | )', '(_|_)'];
+  // While it chews, the top body row opens and shuts as a jaw.
+  const MOUTH = { open: ' v ', shut: ' ^ ' };
   //                     row2      row3      row4        (left, right) per body row
   const LEGS = {
     rest:  [['-', '-'], ['-', '-'], ['-', '-']],
@@ -222,9 +248,10 @@
     walk3: [['-', '-'], ['-', '-'], ['-', '-']],
     air:   [['\\', '/'], ['-', '-'], ['/', '\\']],
   };
-  const EYES = { open: 'o o', right: ' oo', left: 'oo ', wide: 'O O', shut: '- -', ouch: '> <', dizzy: '@ @', happy: '^ ^' };
+  const EYES = { open: 'o o', right: ' oo', left: 'oo ', wide: 'O O', shut: '- -', ouch: '> <', dizzy: '@ @', happy: '^ ^',
+                 wink: 'o -', money: '$ $', hungry: 'O o' };
 
-  let antennae = 'up', eyes = 'o o', legs = 'rest';
+  let antennae = 'up', eyes = 'o o', legs = 'rest', mouth = null;
   let walkFrame = 0;
   let glyphDirty = true;
 
@@ -233,7 +260,7 @@
     return [
       '  ' + (ANTENNAE[antennae] || ANTENNAE.up) + '  ',
       ' (' + eyes + ') ',
-      l[0][0] + BODY[0] + l[0][1],
+      l[0][0] + (mouth ? '(' + mouth + ')' : BODY[0]) + l[0][1],
       l[1][0] + BODY[1] + l[1][1],
       l[2][0] + BODY[2] + l[2][1],
     ].join('\n');
@@ -241,6 +268,7 @@
   function setEyes(e) { if (eyes !== e) { eyes = e; glyphDirty = true; } }
   function setAntennae(a) { if (antennae !== a) { antennae = a; glyphDirty = true; } }
   function setLegs(l) { if (legs !== l) { legs = l; glyphDirty = true; } }
+  function setMouth(m) { if (mouth !== m) { mouth = m; glyphDirty = true; } }
   function stepLegs() {               // one frame of the tripod gait
     walkFrame = (walkFrame + 1) % 4;
     setLegs('walk' + walkFrame);
@@ -270,6 +298,7 @@
   let sx = 1, sy = 1;                     // squash and stretch, eased back to 1
   let stepAcc = 0;
   let nextBlink = 0, nextTwitch = 0, wiggleUntil = 0, surprisedUntil = 0;
+  let chewUntil = 0, nextChomp = 0, nibbleQuipCooldown = 0;
   let clicks = 0, landedOnce = false;
   let nextQuipAt = 0, platQuipCooldown = 0, greetCooldown = 0, fleeCooldown = 0, landQuipCooldown = 0, scrollQuipCooldown = 0;
   let curiousUntil = 0, avoidUntil = 0, avoidDir = 1;
@@ -421,8 +450,102 @@
   // Actions
   // ---------------------------------------------------------------------------
 
+  // Nibbling. It takes a bite out of whatever it is standing on, and the crumbs are
+  // real characters borrowed from the text of the thing it bit, so what falls off the
+  // page is what was written there.
+  //
+  // Candidates are the small things inside a platform: an icon, a tag, a number, a
+  // word of code. Whichever one is nearest its feet gets eaten.
+  const BITE_SELECTOR = 'svg, img, code, .tag, .num, strong, .dot, h3';
+
+  function biteTarget() {
+    if (!plat) return null;
+    const cx = x + w / 2;
+    let best = null, bestD = Infinity;
+    plat.el.querySelectorAll(BITE_SELECTOR).forEach((el) => {
+      const r = el.getBoundingClientRect();
+      if (r.width < 6 || r.height < 6) return;
+      const d = Math.abs((r.left + r.right) / 2 - cx);
+      if (d < bestD) { bestD = d; best = el; }
+    });
+    return best || plat.el;
+  }
+
+  const GENERIC_CRUMBS = ['.', '·', '*'];
+  const ART_CRUMBS = ['·', '°', '*', '.'];
+
+  function crumbChars(el) {
+    if (!el) return GENERIC_CRUMBS;
+    const tag = el.tagName ? el.tagName.toLowerCase() : '';
+    if (tag === 'svg' || tag === 'img') return ART_CRUMBS;    // artwork has no letters to shed
+    const out = [];
+    for (const ch of (el.textContent || '').trim()) {
+      if (ch.trim() && out.indexOf(ch) < 0) out.push(ch);
+      if (out.length >= 12) break;
+    }
+    return out.length ? out : GENERIC_CRUMBS;
+  }
+
+  // A transform on a platform would move the ground under its own feet mid-walk,
+  // so platforms only flicker. Anything nested inside one gets the wobble.
+  function chomp(el) {
+    if (!el) return;
+    const cls = platforms.some((p) => p.el === el) ? 'mx-nipped' : 'mx-chomped';
+    el.classList.remove(cls);
+    el.getBoundingClientRect();                 // force layout so a second bite restarts the animation
+                                                // (offsetWidth would not, an <svg> does not have one)
+    el.classList.add(cls);
+    setTimeout(() => el.classList.remove(cls), 640);
+  }
+
+  function nibble(now) {
+    if (reduceMotion || mode !== 'stand' || chewUntil) return;
+    walking = false;
+    setEyes(EYES.hungry);
+    setAntennae('sniff');
+    chewUntil = now + rand(1100, 1900);
+    surprisedUntil = chewUntil;                 // hold the hungry face for the whole bite
+    nextChomp = now;
+    nextDecision = chewUntil + rand(300, 900);
+    const target = biteTarget();
+    burst(x + w / 2, y + h - 3, 7, crumbChars(target), { up: true, minSpeed: 70, maxSpeed: 200 });
+    chomp(target);
+    if (now > nibbleQuipCooldown) {
+      say(pick(QUIPS.nibble), { priority: 1, hold: 2200 });
+      nibbleQuipCooldown = now + 18000;
+    }
+  }
+
+  function chewTick(now) {
+    if (!chewUntil) return;
+    if (now > chewUntil) {
+      chewUntil = 0;
+      setMouth(null);
+      setEyes(EYES.happy);
+      setAntennae('up');
+      surprisedUntil = now + 500;
+      if (Math.random() < 0.4) {
+        burst(x + w / 2, y + 6, 3, ['~', '°', '.'], { up: true, minSpeed: 40, maxSpeed: 110 });
+        say(pick(QUIPS.burp), { priority: 1, hold: 1600 });
+      }
+      return;
+    }
+    if (now > nextChomp) {
+      setMouth(mouth === MOUTH.open ? MOUTH.shut : MOUTH.open);
+      nextChomp = now + 105;
+      sx = 1.06; sy = 0.94;                     // a chewing squash; the frame eases it back
+    }
+  }
+
+  function stopChew() {
+    if (!chewUntil) return;
+    chewUntil = 0;
+    setMouth(null);
+  }
+
   function jump(upSpeed, sideSpeed) {
     if (mode !== 'stand') return;
+    stopChew();
     mode = 'air';
     plat = null;
     walking = false;
@@ -468,6 +591,10 @@
       else if (Math.random() < 0.3) lines = ON_FLOOR;
       if (lines) { say(pick(lines)); platQuipCooldown = now + 22000; }
     }
+    if (plat && plat.el.matches('.card.hot') && Math.random() < 0.5) {   // the commercial card
+      setEyes(EYES.money);
+      surprisedUntil = now + 1400;
+    }
   }
 
   function flee(now) {
@@ -497,7 +624,7 @@
     else text = asked.next();
     say(text, { priority: 5, live: true });   // asked for directly, so it outranks whatever it was saying
     if (fromKeyboard || reduceMotion) return;
-    setEyes(EYES.happy);
+    setEyes(Math.random() < 0.25 ? EYES.wink : EYES.happy);
     surprisedUntil = now + 900;
   }
 
@@ -630,10 +757,12 @@
     if (mode !== 'air' && mode !== 'drag' && !spin) theta += (0 - theta) * Math.min(1, dt * 8);
     if (surprisedUntil && now > surprisedUntil) { surprisedUntil = 0; if (mode !== 'sleep') { setEyes(EYES.open); setAntennae('up'); } }
 
-    // small life: blinks, antenna twitches, and a whole-body wiggle when petted
+    // small life: chewing, blinks, antenna twitches, and a whole-body wiggle when petted
+    chewTick(now);
     faceTick(now);
-    if (now < wiggleUntil) { theta = Math.sin(now / 40) * 12; if (now > nextTwitch) { twitch(now); nextTwitch = now + 160; } }
+    if (now < wiggleUntil) { theta = Math.sin(now / 40) * 12; setAntennae('curl'); if (now > nextTwitch) { nextTwitch = now + 160; } }
     else if (mode !== 'sleep') {
+      if (antennae === 'curl') setAntennae('up');       // uncurl once the petting stops
       if (now > nextBlink) { if (!surprisedUntil) blink(now); nextBlink = now + rand(2500, 6000); }
       if (now > nextTwitch) { if (!surprisedUntil) twitch(now); nextTwitch = now + rand(1500, 4500); }
     }
@@ -653,6 +782,7 @@
     if (now < curiousUntil || now < avoidUntil) return;
     const r = Math.random();
     const onFloorLong = !plat;
+    if (plat && r < 0.10) { nibble(now); return; }    // a tenth of its decisions are lunch
     if (r < 0.42) {
       walking = true;
       speed = rand(42, 92);
@@ -830,6 +960,7 @@
     if (!drag.moved) {
       if (Math.hypot(e.clientX - drag.sx, e.clientY - drag.sy) < 6) return;
       drag.moved = true;
+      stopChew();
       setEyes(EYES.wide); setAntennae('alert'); surprisedUntil = now + 800;   // picked up: eyes go wide, asleep or not
       mode = reduceMotion ? 'stand' : 'drag';
       plat = null; walking = false; spin = null; hush();
