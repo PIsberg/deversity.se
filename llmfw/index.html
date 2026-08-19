@@ -3,7 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>llm-fw — Local Prompt Injection Firewall &amp; DLP</title>
+  <meta property="og:site_name" content="Deversity">
+  <meta property="og:image" content="https://deversity.se/assets/og/og-llmfw.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="llm-fw: the local prompt injection firewall">
+  <meta name="twitter:image" content="https://deversity.se/assets/og/og-llmfw.png">
+  <title>llm-fw - Local Prompt Injection Firewall &amp; DLP</title>
   <meta name="description" content="A local firewall for LLM traffic. It intercepts, inspects and blocks prompt injection before a request leaves your machine. No cloud calls, no telemetry. Free for noncommercial use.">
   <meta name="keywords" content="llm-fw, prompt injection, firewall, DLP, LLM security, local proxy, data loss prevention, AI guardrails, MCP">
   <meta name="author" content="Peter Isberg">
@@ -11,21 +17,22 @@
   <link rel="canonical" href="https://deversity.se/llmfw/">
 
   <!-- SEO OpenGraph -->
-  <meta property="og:title" content="llm-fw — Local Prompt Injection Firewall">
+  <meta property="og:title" content="llm-fw - Local Prompt Injection Firewall">
   <meta property="og:description" content="Intercept, inspect and block prompt injection locally, before the request leaves your machine. Clean traffic forwards untouched.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://deversity.se/llmfw/">
-  <meta name="twitter:card" content="summary">
+  <meta name="twitter:card" content="summary_large_image">
 
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23050709'/%3E%3Cpath d='M32 9 51 16v14c0 12-8 21-19 25-11-4-19-13-19-25V16z' fill='none' stroke='%2300f5ff' stroke-width='5' stroke-linejoin='round'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <a class="skip-link" href="#main-content">Skip to content</a>
 
   <!-- Header -->
   <header id="site-header" class="header-root">
     <div class="header-container">
-      <a href="./" class="logo-link" id="nav-logo">
+      <a href="./" class="logo-link" id="nav-logo" aria-current="page">
         <span class="logo-icon">&lt;&sol;&gt;</span>
         <span class="logo-text">llm<span class="logo-accent">-fw</span></span>
       </a>
@@ -74,7 +81,7 @@
               <span class="frame-url">localhost:7731</span>
             </div>
             <div class="frame-body">
-              <img src="images/ss-01-dashboard-events.png" alt="llm-fw dashboard showing a live feed of intercepted requests with detection stage and score" class="hero-screenshot">
+              <img src="images/ss-01-dashboard-events.png" width="1400" height="900" decoding="async" alt="llm-fw dashboard showing a live feed of intercepted requests with detection stage and score" class="hero-screenshot">
               <div class="frame-overlay"></div>
             </div>
           </div>
@@ -175,7 +182,7 @@
                 <span class="frame-url">localhost:7731</span>
               </div>
               <div class="frame-body">
-                <img src="images/ss-01-dashboard-events.png" id="showcase-image" alt="llm-fw dashboard screenshot" loading="lazy">
+                <img src="images/ss-01-dashboard-events.png" id="showcase-image" width="1400" height="900" decoding="async" alt="llm-fw dashboard screenshot" loading="lazy">
               </div>
             </div>
             <p class="viewer-desc" id="viewer-description">
@@ -204,7 +211,7 @@
 
           <div class="architecture-graphic">
             <div class="graphic-frame">
-              <img src="images/infographics-llm-fw.jpg" alt="Diagram of llm-fw sitting between local tools and LLM provider APIs" loading="lazy">
+              <img src="images/infographics-llm-fw.jpg" width="1024" height="1024" decoding="async" alt="Diagram of llm-fw sitting between local tools and LLM provider APIs" loading="lazy">
             </div>
           </div>
         </div>
