@@ -1349,3 +1349,55 @@ a {
     width: 100%;
   }
 }
+
+/* The tier table is 488px wide (min-width plus the nowrap price and buy
+   columns), so below ~550px its Buy column falls outside .table-wrap and is
+   only reachable by sideways-scrolling inside the table, which nothing on the
+   page hints at. On a phone the buttons read as missing. Stack each row into a
+   card so tier, price and button are always in view, and give the button a
+   full-width tap target. */
+@media (max-width: 600px) {
+  .table-wrap { overflow-x: visible; }
+
+  .tier-table {
+    display: block;
+    min-width: 0;
+  }
+
+  .tier-table thead { display: none; }
+  .tier-table tbody { display: block; }
+
+  .tier-table tbody tr {
+    display: block;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .tier-table tbody tr:last-child { border-bottom: none; }
+
+  .tier-table tbody th,
+  .tier-table tbody td {
+    display: block;
+    width: auto;
+    padding: 0;
+    border-bottom: none;
+    text-align: left;
+  }
+
+  .tier-table tbody th { font-size: 1rem; }
+
+  .tier-table .price {
+    margin-top: 0.15rem;
+    font-size: 1.05rem;
+    white-space: normal;
+  }
+
+  .tier-table .buy-col { margin-top: 0.75rem; }
+
+  .tier-table .buy-col .buy {
+    display: block;
+    width: 100%;
+    padding: 0.75rem 1.15rem;
+    text-align: center;
+  }
+}
