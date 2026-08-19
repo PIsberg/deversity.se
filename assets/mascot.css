@@ -143,6 +143,27 @@
   will-change: transform, opacity;
 }
 
+/* ---------- Bite marks ---------- */
+
+/* Nested things wobble when the mascot bites them. An element that is itself one of
+   its platforms only flickers: a transform there would move the ground under its feet. */
+@keyframes mx-chomp {
+  0%   { transform: none; }
+  25%  { transform: translate(-1px, 1px) rotate(-7deg) scale(0.88); }
+  55%  { transform: translate(1px, -1px) rotate(5deg) scale(1.07); }
+  100% { transform: none; }
+}
+.mx-chomped {
+  animation: mx-chomp 0.62s ease-out;
+  transform-origin: 50% 60%;
+}
+@keyframes mx-nip {
+  0%, 100% { opacity: 1; }
+  30%      { opacity: 0.55; }
+  60%      { opacity: 0.88; }
+}
+.mx-nipped { animation: mx-nip 0.62s ease-out; }
+
 /* ---------- Screen readers ---------- */
 
 .mx-live {
@@ -162,4 +183,5 @@
 @media (prefers-reduced-motion: reduce) {
   .mx-bubble, .mx-close { transition: none; }
   .mx-caret { animation: none; }
+  .mx-chomped, .mx-nipped { animation: none; }
 }
