@@ -587,6 +587,53 @@ td.price { font-family: var(--mono); color: var(--accent); font-weight: 600; whi
   }
 }
 
+/* Below ~545px the pricing table (501px wide, from the nowrap price and buy
+   columns) is wider than .table-wrap, so its Buy column sits outside the box
+   and can only be reached by sideways-scrolling inside the table — with no
+   affordance saying so. On a phone the buttons are simply not there. Stack
+   each row into a card instead, so tier, price and button are always in view
+   and the button is a full-width tap target. */
+@media (max-width: 600px) {
+  .table-wrap { overflow-x: visible; }
+  .table-wrap table {
+    display: block;
+    background: none;
+    border: none;
+    border-radius: 0;
+    margin: 0;
+  }
+  .table-wrap thead { display: none; }
+  .table-wrap tbody { display: block; }
+  .table-wrap tbody tr {
+    display: block;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+  }
+  .table-wrap tbody tr + tr { margin-top: 12px; }
+  .table-wrap tbody tr:hover { background: var(--panel); }
+  .table-wrap tbody td {
+    display: block;
+    width: auto;
+    padding: 0;
+    border-bottom: none;
+    text-align: left;
+  }
+  .table-wrap tbody td.price {
+    margin-top: 2px;
+    font-size: 1.05rem;
+    white-space: normal;
+  }
+  .table-wrap tbody td.buy-col { margin-top: 12px; }
+  .table-wrap tbody td.buy-col .buy {
+    display: block;
+    width: 100%;
+    padding: 12px 18px;
+    text-align: center;
+  }
+}
+
 /* ---------- Reduced motion ---------- */
 
 @media (prefers-reduced-motion: reduce) {
