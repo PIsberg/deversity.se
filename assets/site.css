@@ -66,6 +66,29 @@ code {
   border-radius: 5px;
 }
 
+/* ---------- Skip link ---------- */
+
+/* Parked off screen until it takes focus, so a keyboard user can jump the seven
+   nav links on every page without a control everyone else has to look at. */
+.skip-link {
+  position: absolute;
+  left: 12px;
+  top: -60px;
+  z-index: 100;
+  padding: 9px 14px;
+  font: 600 0.85rem / 1 var(--mono);
+  color: var(--accent-ink);
+  background: var(--accent);
+  border-radius: 8px;
+  text-decoration: none;
+  transition: top 0.15s ease;
+}
+.skip-link:focus { top: 12px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .skip-link { transition: none; }
+}
+
 /* ---------- Header ---------- */
 
 .site-head {
