@@ -421,3 +421,49 @@ h1, h2, h3 { color: var(--color-text-bright); line-height: 1.2; }
   .grid.three, .grid.bento { grid-template-columns: 1fr; }
   .hero-section { padding-top: 56px; }
 }
+
+/* ---------- Customer logo wall ---------- */
+
+.customer-wall {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 18px 40px;
+  margin: 26px 0 10px;
+}
+.customer-wall li {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 34px;
+}
+/* Logo files ship pre-flattened to a single grey (#c2cad8), not greyed by a CSS
+   filter. Several of these logos are near-black or use currentColor, which a
+   grayscale() filter would leave invisible against the #07070a background. */
+.customer-wall img {
+  max-height: 100%;
+  max-width: 150px;
+  width: auto;
+  opacity: 0.6;
+  transition: opacity 0.2s ease;
+}
+.customer-wall li:hover img { opacity: 0.95; }
+
+.customer-note {
+  text-align: center;
+  font-size: 0.82rem;
+  color: var(--color-text-dim);
+  opacity: 0.75;
+  margin-top: 6px;
+}
+
+@media (max-width: 700px) {
+  .customer-wall { gap: 16px 26px; }
+  .customer-wall li { height: 26px; }
+  .customer-wall img { max-width: 110px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .customer-wall img { transition: none; }
+}
