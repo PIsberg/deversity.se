@@ -371,7 +371,7 @@
     speech.typing = !reduceMotion;
     speech.on = true;
     const typeMs = reduceMotion ? 0 : (text.length / 34) * 1000;
-    speech.until = now + typeMs + (opts.hold || Math.min(8000, 1900 + text.length * 48));
+    speech.until = now + typeMs + (opts.hold || Math.min(5600, 1500 + text.length * 34));
     // Measure the finished bubble first, so it does not grow under the reader while the text types out.
     bubbleText.textContent = text;
     caret.hidden = reduceMotion;
@@ -383,10 +383,10 @@
     bubble.classList.add('on');
     if (opts.live) live.textContent = text;
     // Space the ambient lines out; incidental remarks (priority 0) barely move the schedule.
-    nextQuipAt = Math.max(nextQuipAt, speech.until + (priority >= 1 ? rand(12000, 22000) : 3000));
+    nextQuipAt = Math.max(nextQuipAt, speech.until + (priority >= 1 ? rand(26000, 42000) : 6000));
     return true;
   }
-  function hush() { speech.on = false; bubble.classList.remove('on'); caret.hidden = true; }
+  function hush() { speech.on = false; bubble.classList.remove('on', 'mx-yield'); caret.hidden = true; }
 
   function speechTick(now, dt) {
     if (!speech.on) return;
@@ -410,6 +410,13 @@
     bubble.classList.toggle('below', below);
     bubble.style.setProperty('--mx-tail', clamp(cx - bx, 14, bw - 14).toFixed(0) + 'px');
     bubble.style.transform = 'translate3d(' + bx.toFixed(1) + 'px,' + by.toFixed(1) + 'px,0)';
+    // The bubble is drawn over the page, so anything under it is unreadable while it
+    // is up. If the pointer crosses into that area the reader is trying to use what is
+    // underneath, so fade out rather than making them wait for the line to finish.
+    const near = 24;
+    const over = ptr.seen && ptr.x > bx - near && ptr.x < bx + bw + near
+                          && ptr.y > by - near && ptr.y < by + bh + near;
+    bubble.classList.toggle('mx-yield', over);
   }
 
   // ---------------------------------------------------------------------------
@@ -821,8 +828,9 @@
     const approaching = ptr.vx * (cx - ptr.x) + ptr.vy * (cy - ptr.y) > 0;
     if (pspeed > 750 && d < 130 && approaching && sinceMove < 120 && now > fleeCooldown) { flee(now); return; }
 
-    // sitting on top of a link someone is about to click: step aside
-    if (ptr.overLink && d < 95 && sinceMove < 1500 && now > avoidUntil) {
+    // in the way of someone who is reading or reaching for a control: step aside.
+    // Widened from links-only, because the body covers body text and buttons alike.
+    if ((ptr.overLink ? d < 150 : d < 110) && sinceMove < 1500 && now > avoidUntil) {
       avoidUntil = now + 900;
       avoidDir = dx > 0 ? -1 : 1;
       curiousUntil = 0;
