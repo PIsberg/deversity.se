@@ -6,7 +6,7 @@
   --mx-size: 12px;                     /* one text cell; the whole body scales from this */
   position: fixed;
   inset: 0;
-  z-index: 60;                         /* above the sticky header (50) */
+  z-index: 40;                         /* below the sticky header (50), so the nav is never covered */
   pointer-events: none;                /* only the body itself is clickable */
   overflow: hidden;
   font-family: var(--mono);
@@ -63,13 +63,13 @@
   position: absolute;
   left: 0;
   top: 0;
-  max-width: min(270px, calc(100vw - 24px));
-  padding: 8px 11px;
+  max-width: min(230px, calc(100vw - 24px));
+  padding: 7px 10px;
   font: 0.78rem / 1.45 var(--mono);
   color: var(--ink);
   white-space: pre-wrap;
   overflow-wrap: anywhere;
-  background: rgba(15, 23, 34, 0.97);
+  background: rgba(15, 23, 34, 0.9);
   border: 1px solid var(--line);
   border-radius: 10px;
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
@@ -78,6 +78,9 @@
   will-change: transform;
 }
 .mx-bubble.on { opacity: 1; }
+/* Reading beats talking: when the pointer moves over whatever the bubble is
+   covering, it drops out of the way instead of making the reader wait it out. */
+.mx-bubble.on.mx-yield { opacity: 0.12; }
 .mx-bubble::after {                    /* tail; --mx-tail is set from JS so it keeps pointing at the body */
   content: "";
   position: absolute;
