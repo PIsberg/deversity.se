@@ -1,560 +1,470 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta property="og:site_name" content="Deversity">
-  <meta property="og:image" content="https://deversity.se/assets/og/og-llmfw.png">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="630">
-  <meta property="og:image:alt" content="llm-fw: the local prompt injection firewall">
-  <meta name="twitter:image" content="https://deversity.se/assets/og/og-llmfw.png">
-  <title>llm-fw - Local Prompt Injection Firewall &amp; DLP</title>
-  <meta name="description" content="A local firewall for LLM traffic. It intercepts, inspects and blocks prompt injection before a request leaves your machine. No cloud calls, no telemetry. Free for noncommercial use.">
-  <meta name="keywords" content="llm-fw, prompt injection, firewall, DLP, LLM security, local proxy, data loss prevention, AI guardrails, MCP">
-  <meta name="author" content="Peter Isberg">
-  <meta name="theme-color" content="#050709">
-  <link rel="canonical" href="https://deversity.se/llmfw/">
-
-  <!-- SEO OpenGraph -->
-  <meta property="og:title" content="llm-fw - Local Prompt Injection Firewall">
-  <meta property="og:description" content="Intercept, inspect and block prompt injection locally, before the request leaves your machine. Clean traffic forwards untouched.">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://deversity.se/llmfw/">
-  <meta name="twitter:card" content="summary_large_image">
-
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23050709'/%3E%3Cpath d='M32 9 51 16v14c0 12-8 21-19 25-11-4-19-13-19-25V16z' fill='none' stroke='%2300f5ff' stroke-width='5' stroke-linejoin='round'/%3E%3C/svg%3E">
-  <link rel="stylesheet" href="style.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta property="og:site_name" content="Deversity">
+<meta property="og:image" content="https://deversity.se/assets/og/og-llmfw.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="llm-fw: the local prompt injection firewall">
+<meta name="twitter:image" content="https://deversity.se/assets/og/og-llmfw.png">
+<title>llm-fw - Local Prompt Injection Firewall &amp; DLP</title>
+<meta name="description" content="A local firewall for LLM traffic. It intercepts, inspects and blocks prompt injection before a request leaves your machine. No cloud calls, no telemetry. Free for noncommercial use.">
+<meta name="keywords" content="llm-fw, prompt injection, firewall, DLP, LLM security, local proxy, data loss prevention, AI guardrails, MCP">
+<meta name="author" content="Peter Isberg">
+<meta name="theme-color" content="#0a0e14">
+<link rel="canonical" href="https://deversity.se/llmfw/">
+<meta property="og:title" content="llm-fw - Local Prompt Injection Firewall">
+<meta property="og:description" content="Intercept, inspect and block prompt injection locally, before the request leaves your machine. Clean traffic forwards untouched.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://deversity.se/llmfw/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230a0e14'/%3E%3Cpath d='M32 9 51 16v14c0 12-8 21-19 25-11-4-19-13-19-25V16z' fill='none' stroke='%232dd4ea' stroke-width='5' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="preload" href="/assets/fonts/Inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/JetBrainsMono-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/site.css">
+<link rel="stylesheet" href="style.css">
+<script>document.documentElement.classList.add('js');</script>
 </head>
 <body>
-  <a class="skip-link" href="#main-content">Skip to content</a>
-
-  <!-- Header -->
-  <header id="site-header" class="header-root">
-    <div class="header-container">
-      <a href="./" class="logo-link" id="nav-logo" aria-current="page">
-        <span class="logo-icon">&lt;&sol;&gt;</span>
-        <span class="logo-text">llm<span class="logo-accent">-fw</span></span>
-      </a>
-      <nav class="nav-links">
-        <a href="#pipeline" class="nav-item">Defense Pipeline</a>
-        <a href="#features" class="nav-item">Features</a>
-        <a href="#licensing" class="nav-item">Licensing</a>
-        <a href="#setup" class="nav-item">Quick Start</a>
-        <a href="#faq" class="nav-item">FAQ</a>
-      </nav>
-      <div class="header-actions">
-        <a href="#licensing" class="cta-button primary-cta">Licensing</a>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-head">
+  <nav class="nav wrap" aria-label="Main">
+    <a class="brand" href="/">
+      <svg class="mark" viewBox="0 0 64 64" aria-hidden="true"><rect x="2" y="2" width="60" height="60" rx="14" fill="none" stroke="currentColor" opacity="0.35" stroke-width="4"/><path d="M22 17h11a15 15 0 0 1 0 30H22z" fill="none" stroke="currentColor" stroke-width="6" stroke-linejoin="round"/></svg>
+      Deversity
+    </a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-menu" aria-label="Menu">
+      <svg class="bars" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M3 6h14M3 10h14M3 14h14"/></svg>
+      <svg class="x" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M5 5l10 10M15 5L5 15"/></svg>
+    </button>
+    <div class="nav-menu" id="nav-menu">
+      <div class="nav-links">
+        <a href="/">async-test-lib</a>
+        <a href="/llmfw/" aria-current="page">llm-fw</a>
+        <a href="/vibetags/">VibeTags</a>
+        <a href="/pricing.html">Pricing</a>
+      </div>
+      <div class="nav-actions">
+        <a class="btn btn-ghost btn-sm" href="https://github.com/PIsberg/llm-fw">
+          <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+          GitHub
+        </a>
       </div>
     </div>
-  </header>
+  </nav>
+</header>
+<div class="subnav">
+  <nav class="wrap subnav-inner" aria-label="On this page">
+    <a class="subnav-name" href="#main"><span class="glyph" aria-hidden="true">&lt;/&gt;</span>llm-fw</a>
+    <div class="subnav-links">
+      <a href="#showcase">Dashboard</a>
+      <a href="#pipeline">Pipeline</a>
+      <a href="#features">Features</a>
+      <a href="#licensing">Licensing</a>
+      <a href="#setup">Quick start</a>
+      <a href="#faq">FAQ</a>
+    </div>
+  </nav>
+</div>
 
-  <!-- Main Content -->
-  <main id="main-content">
+<main class="wrap" id="main">
 
-    <!-- Hero Section -->
-    <section class="hero-section" id="hero">
-      <div class="hero-container">
-        <div class="hero-content">
-          <h1 class="hero-title">
-            The Local Prompt Injection Firewall
-          </h1>
-          <p class="hero-subtitle">
-            Intercept, inspect and block LLM requests on your own machine. Nothing leaves it, and clean traffic is not slowed down.
-          </p>
-          <div class="hero-actions">
-            <a href="#setup" class="btn btn-primary" id="hero-btn-install">Install in two minutes</a>
-            <a href="https://github.com/PIsberg/llm-fw" class="btn btn-secondary" id="hero-btn-source" rel="noopener">Read the source</a>
-          </div>
-          <p class="hero-meta">
-            Free for noncommercial use under
-            <a href="https://polyformproject.org/licenses/noncommercial/1.0.0" rel="noopener">PolyForm Noncommercial 1.0.0</a>
-            &middot; <a href="#licensing">commercial licence</a> for company use
-          </p>
+  <section class="hero" id="hero">
+    <div class="hero-copy">
+      <p class="eyebrow">local prompt injection firewall</p>
+      <h1>Stop prompt injection<br><span class="hl">before it leaves your machine.</span></h1>
+      <p class="lede">llm-fw intercepts, inspects and blocks LLM requests on your own machine. Nothing
+      leaves it, and clean traffic is not slowed down.</p>
+      <div class="actions">
+        <a class="btn btn-primary" href="#setup">Install in two minutes
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+        </a>
+        <a class="btn btn-ghost" href="https://github.com/PIsberg/llm-fw" rel="noopener">Read the source</a>
+      </div>
+      <ul class="ticks" aria-label="At a glance">
+        <li>Free for noncommercial use</li>
+        <li>No cloud calls, no telemetry</li>
+        <li>Node.js 22+ &middot; Windows, macOS, Linux</li>
+        <li><a href="#licensing">Commercial licence</a> for company use</li>
+      </ul>
+    </div>
+    <div class="hero-visual">
+      <div class="image-frame">
+        <div class="frame-bar">
+          <span class="frame-dots" aria-hidden="true"><span></span><span></span><span></span></span>
+          <span class="frame-url">localhost:7731</span>
         </div>
-
-        <!-- Real Screenshot Hero Visual -->
-        <div class="hero-visual-container">
-          <div class="image-frame hero-frame">
-            <div class="frame-bar">
-              <span class="frame-dots" aria-hidden="true"><span></span><span></span><span></span></span>
-              <span class="frame-url">localhost:7731</span>
-            </div>
-            <div class="frame-body">
-              <img src="images/ss-01-dashboard-events.png" width="1400" height="900" decoding="async" alt="llm-fw dashboard showing a live feed of intercepted requests with detection stage and score" class="hero-screenshot">
-              <div class="frame-overlay"></div>
-            </div>
-          </div>
+        <div class="frame-body">
+          <img src="images/ss-01-dashboard-events.png" width="1400" height="900" decoding="async" alt="llm-fw dashboard showing a live feed of intercepted requests with detection stage and score">
         </div>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- Logo Wall -->
-    <section class="logo-wall-section" id="logo-wall">
-      <div class="logo-wall-container">
-        <p class="logo-wall-caption">Covers every major provider out of the box — OpenAI, Anthropic, Google Gemini and Vertex, Azure OpenAI, AWS Bedrock, Mistral, Groq, DeepSeek, Cohere, xAI, Perplexity, OpenRouter, Together, Fireworks, Anyscale and Hugging Face.</p>
-        <div class="logo-grid">
-          <!-- OpenAI Logo -->
-          <svg class="logo-svg" viewBox="0 0 24 24" fill="currentColor" aria-label="OpenAI">
-            <path d="M22.28 9.82a5.98 5.98 0 0 0-.52-4.91 6.05 6.05 0 0 0-6.51-2.9A6.07 6.07 0 0 0 4.98 4.18a5.98 5.98 0 0 0-4 2.9 6.05 6.05 0 0 0 .75 7.1 5.98 5.98 0 0 0 .51 4.91 6.05 6.05 0 0 0 6.52 2.9A5.98 5.98 0 0 0 13.26 24a6.05 6.05 0 0 0 5.77-4.19 5.98 5.98 0 0 0 4-2.9 6.05 6.05 0 0 0-.75-7.09zM13.26 22.43a4.48 4.48 0 0 1-2.88-1.04l.14-.08 4.78-2.76a.79.79 0 0 0 .39-.68v-6.74l2.02 1.17a.07.07 0 0 1 .04.06v5.58a4.5 4.5 0 0 1-4.5 4.49zM3.6 18.3a4.47 4.47 0 0 1-.535-3.01l.142.085 4.783 2.762a.78.78 0 0 0 .78 0l5.843-3.369v2.332a.08.08 0 0 1-.033.062L9.74 19.95a4.5 4.5 0 0 1-6.14-1.65zM2.34 7.9a4.49 4.49 0 0 1 2.35-1.98v5.68a.77.77 0 0 0 .39.68l5.82 3.36-2.02 1.17a.08.08 0 0 1-.07 0L4 14.02a4.5 4.5 0 0 1-1.65-6.13zm16.6 3.86-5.84-3.4L15.1 7.2a.08.08 0 0 1 .07 0l4.83 2.79a4.49 4.49 0 0 1-.68 8.1v-5.68a.79.79 0 0 0-.39-.66zm2.01-3.02-.14-.09-4.77-2.78a.78.78 0 0 0-.79 0L9.42 9.24V6.9a.07.07 0 0 1 .03-.06l4.83-2.79a4.5 4.5 0 0 1 6.68 4.66zM8.32 12.86 6.3 11.7a.08.08 0 0 1-.04-.06V6.07a4.5 4.5 0 0 1 7.38-3.45l-.14.08L8.72 5.46a.79.79 0 0 0-.39.68zm1.1-2.37 2.6-1.5 2.61 1.5v3l-2.6 1.5-2.61-1.5z"/>
-          </svg>
-          <!-- Anthropic Logo -->
-          <svg class="logo-svg" viewBox="0 0 24 24" fill="currentColor" aria-label="Anthropic">
-            <path d="M16.65 3.4h-3.42l6.24 17.2H23zM7.35 3.4 1 20.6h3.6l1.28-3.6h6.55l1.28 3.6h3.6L11.03 3.4zm-.3 10.5 2.13-6 2.13 6z"/>
-          </svg>
-          <!-- Google Gemini Logo -->
-          <svg class="logo-svg" viewBox="0 0 24 24" fill="currentColor" aria-label="Google Gemini">
-            <path d="M12 0c0 6.63 5.37 12 12 12-6.63 0-12 5.37-12 12 0-6.63-5.37-12-12-12 6.63 0 12-5.37 12-12z"/>
-          </svg>
-          <!-- Mistral Logo -->
-          <svg class="logo-svg" viewBox="0 0 24 24" fill="currentColor" aria-label="Mistral AI">
-            <path d="M3 3h4v4H3zm7 0h4v4h-4zm7 0h4v4h-4zM3 10h4v4H3zm7 0h4v4h-4zm7 0h4v4h-4zM3 17h4v4H3zm14 0h4v4h-4z"/>
-          </svg>
-          <!-- Ollama Logo -->
-          <svg class="logo-svg" viewBox="0 0 24 24" fill="currentColor" aria-label="Ollama">
-            <path d="M12 2c-2.2 0-4 2.2-4 5 0 .6.1 1.2.2 1.7C6.9 9.8 6 11.6 6 13.6c0 1.5.5 2.9 1.4 4L6 20.4c-.3.5.1 1.1.7 1.1h10.6c.6 0 1-.6.7-1.1L16.6 17.6c.9-1.1 1.4-2.5 1.4-4 0-2-.9-3.8-2.2-4.9.1-.5.2-1.1.2-1.7 0-2.8-1.8-5-4-5zm-2.5 11a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3zm5 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3z"/>
-          </svg>
-          <!-- Model Context Protocol -->
-          <svg class="logo-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-label="Model Context Protocol">
-            <path d="M2 12h4m12 0h4M12 2v4m0 12v4"/>
-            <circle cx="12" cy="12" r="5"/>
-          </svg>
+  <section class="stats" style="--cols: 3" aria-label="Detection results">
+    <div><strong>100%</strong><span>attacks detected</span><small>110/110, heuristic + embedding stages</small></div>
+    <div><strong>0%</strong><span>false positives</span><small>0/78 benign prompts</small></div>
+    <div><strong>95%</strong><span>recall on unseen attacks</span><small>1,071 real InjecAgent cases, never tuned on</small></div>
+  </section>
+  <p class="stats-caption">Full methodology and held-out numbers:
+    <a href="https://github.com/PIsberg/llm-fw/blob/main/docs/SCORECARD.md" rel="noopener">Detection Scorecard</a>
+    &middot;
+    <a href="https://github.com/PIsberg/llm-fw/blob/main/docs/BENCHMARK.md" rel="noopener">Generalization Benchmark</a>
+  </p>
+
+  <section class="providers" aria-label="Supported providers">
+    <p>Covers every major provider out of the box: OpenAI, Anthropic, Google Gemini and Vertex, Azure OpenAI, AWS Bedrock, Mistral, Groq, DeepSeek, Cohere, xAI, Perplexity, OpenRouter, Together, Fireworks, Anyscale and Hugging Face.</p>
+    <div class="logo-grid">
+      <svg class="logo-svg" viewBox="0 0 24 24" fill="currentColor" role="img" aria-label="OpenAI">
+        <path d="M22.28 9.82a5.98 5.98 0 0 0-.52-4.91 6.05 6.05 0 0 0-6.51-2.9A6.07 6.07 0 0 0 4.98 4.18a5.98 5.98 0 0 0-4 2.9 6.05 6.05 0 0 0 .75 7.1 5.98 5.98 0 0 0 .51 4.91 6.05 6.05 0 0 0 6.52 2.9A5.98 5.98 0 0 0 13.26 24a6.05 6.05 0 0 0 5.77-4.19 5.98 5.98 0 0 0 4-2.9 6.05 6.05 0 0 0-.75-7.09zM13.26 22.43a4.48 4.48 0 0 1-2.88-1.04l.14-.08 4.78-2.76a.79.79 0 0 0 .39-.68v-6.74l2.02 1.17a.07.07 0 0 1 .04.06v5.58a4.5 4.5 0 0 1-4.5 4.49zM3.6 18.3a4.47 4.47 0 0 1-.535-3.01l.142.085 4.783 2.762a.78.78 0 0 0 .78 0l5.843-3.369v2.332a.08.08 0 0 1-.033.062L9.74 19.95a4.5 4.5 0 0 1-6.14-1.65zM2.34 7.9a4.49 4.49 0 0 1 2.35-1.98v5.68a.77.77 0 0 0 .39.68l5.82 3.36-2.02 1.17a.08.08 0 0 1-.07 0L4 14.02a4.5 4.5 0 0 1-1.65-6.13zm16.6 3.86-5.84-3.4L15.1 7.2a.08.08 0 0 1 .07 0l4.83 2.79a4.49 4.49 0 0 1-.68 8.1v-5.68a.79.79 0 0 0-.39-.66zm2.01-3.02-.14-.09-4.77-2.78a.78.78 0 0 0-.79 0L9.42 9.24V6.9a.07.07 0 0 1 .03-.06l4.83-2.79a4.5 4.5 0 0 1 6.68 4.66zM8.32 12.86 6.3 11.7a.08.08 0 0 1-.04-.06V6.07a4.5 4.5 0 0 1 7.38-3.45l-.14.08L8.72 5.46a.79.79 0 0 0-.39.68zm1.1-2.37 2.6-1.5 2.61 1.5v3l-2.6 1.5-2.61-1.5z"/>
+      </svg>
+      <svg class="logo-svg" viewBox="0 0 24 24" fill="currentColor" role="img" aria-label="Anthropic">
+        <path d="M16.65 3.4h-3.42l6.24 17.2H23zM7.35 3.4 1 20.6h3.6l1.28-3.6h6.55l1.28 3.6h3.6L11.03 3.4zm-.3 10.5 2.13-6 2.13 6z"/>
+      </svg>
+      <svg class="logo-svg" viewBox="0 0 24 24" fill="currentColor" role="img" aria-label="Google Gemini">
+        <path d="M12 0c0 6.63 5.37 12 12 12-6.63 0-12 5.37-12 12 0-6.63-5.37-12-12-12 6.63 0 12-5.37 12-12z"/>
+      </svg>
+      <svg class="logo-svg" viewBox="0 0 24 24" fill="currentColor" role="img" aria-label="Mistral AI">
+        <path d="M3 3h4v4H3zm7 0h4v4h-4zm7 0h4v4h-4zM3 10h4v4H3zm7 0h4v4h-4zm7 0h4v4h-4zM3 17h4v4H3zm14 0h4v4h-4z"/>
+      </svg>
+      <svg class="logo-svg" viewBox="0 0 24 24" fill="currentColor" role="img" aria-label="Ollama">
+        <path d="M12 2c-2.2 0-4 2.2-4 5 0 .6.1 1.2.2 1.7C6.9 9.8 6 11.6 6 13.6c0 1.5.5 2.9 1.4 4L6 20.4c-.3.5.1 1.1.7 1.1h10.6c.6 0 1-.6.7-1.1L16.6 17.6c.9-1.1 1.4-2.5 1.4-4 0-2-.9-3.8-2.2-4.9.1-.5.2-1.1.2-1.7 0-2.8-1.8-5-4-5zm-2.5 11a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3zm5 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3z"/>
+      </svg>
+      <svg class="logo-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" role="img" aria-label="Model Context Protocol">
+        <path d="M2 12h4m12 0h4M12 2v4m0 12v4"/>
+        <circle cx="12" cy="12" r="5"/>
+      </svg>
+    </div>
+  </section>
+
+  <section class="section" id="showcase">
+    <div class="section-head">
+      <p class="eyebrow">dashboard</p>
+      <h2>Watch what it blocks</h2>
+      <p>Every intercepted request lands in a dashboard on <code>localhost:7731</code>, with the stage that caught it, the score, and the decoded payload.</p>
+    </div>
+    <div class="showcase-layout">
+      <div class="showcase-tabs" role="tablist" aria-label="Dashboard views">
+        <button class="tab-btn active" type="button" data-img="images/ss-01-dashboard-events.png" data-desc="Events feed: intercepted requests appear as they happen, tagged with the stage that caught them (heuristic, embedding, dos, rag or dlp) and their score.">
+          <span class="tab-dot"></span> Live intercept feed
+        </button>
+        <button class="tab-btn" type="button" data-img="images/ss-02-event-detail.png" data-desc="Event detail: the full decoded payload, the heuristic rules that matched, the nearest attack anchor, and request metadata. One click marks a false positive so an identical prompt is warned about instead of blocked.">
+          <span class="tab-dot"></span> Event detail
+        </button>
+        <button class="tab-btn" type="button" data-img="images/ss-03-playground-input.png" data-desc="Playground: paste any prompt and run it through the real pipeline. Covers injection, ASCII smuggling, images and documents, RAG poisoning, DLP, MCP tools, URLs and rate limits, and can re-express the prompt in another language and re-test it.">
+          <span class="tab-dot"></span> Prompt playground
+        </button>
+        <button class="tab-btn" type="button" data-img="images/ss-04-playground-result.png" data-desc="Stage-by-stage verdict: the heuristic score with the rules it matched, the embedding cosine similarity, and the judge's status, so a block is explainable rather than a black box.">
+          <span class="tab-dot"></span> Pipeline verdict
+        </button>
+        <button class="tab-btn" type="button" data-img="images/ss-05-live-traffic.png" data-desc="Live traffic: a rolling 60-second bytes-per-second chart, per-provider utilisation, and a connection log with sent and received byte counts.">
+          <span class="tab-dot"></span> Traffic monitor
+        </button>
+        <button class="tab-btn" type="button" data-img="images/ss-06-mcp-monitoring.png" data-desc="MCP monitoring: the tools being exposed to the model, the invocations coming back, and the results they return, each marked passed or blocked against the tool policy.">
+          <span class="tab-dot"></span> MCP tool firewall
+        </button>
+      </div>
+      <div class="showcase-viewer">
+        <div class="image-frame">
+          <div class="frame-bar">
+            <span class="frame-dots" aria-hidden="true"><span></span><span></span><span></span></span>
+            <span class="frame-url">localhost:7731</span>
+          </div>
+          <div class="frame-body">
+            <img src="images/ss-01-dashboard-events.png" id="showcase-image" width="1400" height="900" decoding="async" alt="llm-fw dashboard screenshot" loading="lazy">
+          </div>
         </div>
-        <div class="stats-row">
-          <div class="stat-item">
-            <span class="stat-number">100%</span>
-            <span class="stat-label">Attacks detected<br>110/110, heuristic + embedding stages</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-number">0%</span>
-            <span class="stat-label">False positives<br>0/78 benign prompts</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-number">95%</span>
-            <span class="stat-label">Recall on unseen attacks<br>1,071 real InjecAgent cases, never tuned on</span>
-          </div>
-        </div>
-        <p class="stats-caption">
-          Full methodology and held-out numbers:
-          <a href="https://github.com/PIsberg/llm-fw/blob/main/docs/SCORECARD.md" rel="noopener">Detection Scorecard</a>
-          &middot;
-          <a href="https://github.com/PIsberg/llm-fw/blob/main/docs/BENCHMARK.md" rel="noopener">Generalization Benchmark</a>
+        <p class="viewer-desc" id="viewer-description">
+          Events feed: intercepted requests appear as they happen, tagged with the stage that caught them (heuristic, embedding, dos, rag or dlp) and their score.
         </p>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- Dashboard Showcase Section -->
-    <section class="showcase-section" id="showcase">
-      <div class="section-container">
-        <h2 class="section-title">Watch what it blocks</h2>
-        <p class="section-description">
-          Every intercepted request lands in a dashboard on <code>localhost:7731</code>, with the stage that caught it, the score, and the decoded payload.
-        </p>
+  <section class="section" id="architecture">
+    <div class="arch-layout">
+      <div>
+        <div class="section-head">
+          <p class="eyebrow">how it fits in</p>
+          <h2>A proxy your tools already know how to use</h2>
+          <p>Point <code>HTTPS_PROXY</code> at <code>127.0.0.1:8080</code> and every SDK, CLI and agent that respects it is covered. No SDK wrapper, no code change.</p>
+        </div>
+        <ul class="checks">
+          <li><strong>Local certificate authority.</strong> Setup generates a root CA and registers it in your OS trust store, so TLS can be terminated and inspected locally.</li>
+          <li><strong>OS-level sinkhole.</strong> For Node.js and native binaries that ignore proxy variables, a hosts entry plus a <code>:443</code> port redirect brings them in anyway.</li>
+          <li><strong>No cloud dependency.</strong> No API keys, no accounts, no telemetry. Detection models run on your CPU and the event log stays on disk.</li>
+        </ul>
+      </div>
+      <div class="graphic-frame">
+        <img src="images/infographics-llm-fw.jpg" width="1024" height="1024" decoding="async" alt="Diagram of llm-fw sitting between local tools and LLM provider APIs" loading="lazy">
+      </div>
+    </div>
+  </section>
 
-        <div class="showcase-layout">
-          <!-- Left side tabs -->
-          <div class="showcase-tabs">
-            <button class="tab-btn active" data-img="images/ss-01-dashboard-events.png" data-desc="Events feed: intercepted requests appear as they happen, tagged with the stage that caught them — heuristic, embedding, dos, rag or dlp — and their score.">
-              <span class="tab-dot"></span> Live intercept feed
-            </button>
-            <button class="tab-btn" data-img="images/ss-02-event-detail.png" data-desc="Event detail: the full decoded payload, the heuristic rules that matched, the nearest attack anchor, and request metadata. One click marks a false positive so an identical prompt is warned about instead of blocked.">
-              <span class="tab-dot"></span> Event detail
-            </button>
-            <button class="tab-btn" data-img="images/ss-03-playground-input.png" data-desc="Playground: paste any prompt and run it through the real pipeline. Covers injection, ASCII smuggling, images and documents, RAG poisoning, DLP, MCP tools, URLs and rate limits — and can re-express the prompt in another language and re-test it.">
-              <span class="tab-dot"></span> Prompt playground
-            </button>
-            <button class="tab-btn" data-img="images/ss-04-playground-result.png" data-desc="Stage-by-stage verdict: the heuristic score with the rules it matched, the embedding cosine similarity, and the judge's status — so a block is explainable rather than a black box.">
-              <span class="tab-dot"></span> Pipeline verdict
-            </button>
-            <button class="tab-btn" data-img="images/ss-05-live-traffic.png" data-desc="Live traffic: a rolling 60-second bytes-per-second chart, per-provider utilisation, and a connection log with sent and received byte counts.">
-              <span class="tab-dot"></span> Traffic monitor
-            </button>
-            <button class="tab-btn" data-img="images/ss-06-mcp-monitoring.png" data-desc="MCP monitoring: the tools being exposed to the model, the invocations coming back, and the results they return — each marked passed or blocked against the tool policy.">
-              <span class="tab-dot"></span> MCP tool firewall
-            </button>
-          </div>
+  <section class="section" id="pipeline">
+    <div class="section-head">
+      <p class="eyebrow">three-stage defense</p>
+      <h2>Cheap checks first, expensive ones only when needed</h2>
+      <p>A prompt falls through three stages. Most traffic never reaches stage two.</p>
+    </div>
+    <div class="grid three steps">
+      <div class="card">
+        <span class="num">01</span>
+        <span class="tag">&lt; 1 ms</span>
+        <h3>Heuristic scoring</h3>
+        <p>Weighted phrase matching over a normalisation pass built to survive evasion: spacing, case, homoglyphs and leetspeak, plus decoding of base64, base32, hex, binary, morse, ROT13, URL-encoding and reversed text back to plaintext.</p>
+      </div>
+      <div class="card">
+        <span class="num">02</span>
+        <span class="tag">&lt; 20 ms warm</span>
+        <h3>Cross-lingual embeddings</h3>
+        <p>Cosine similarity against canonical injection-intent anchors using a local <code>multilingual-e5-small</code> ONNX model. Because the encoder aligns around 100 languages, an injection written in Urdu or Thai lands near the English anchors with no rule written for it.</p>
+      </div>
+      <div class="card">
+        <span class="num">03</span>
+        <span class="tag warn">Opt-in</span>
+        <h3>Local LLM judge</h3>
+        <p>A local Ollama model, <code>qwen2.5:3b</code> by default, reasons about intent on the prompts the cheap stages are unsure about. An opt-in ONNX classifier can take that role instead, with no Ollama required.</p>
+      </div>
+    </div>
+  </section>
 
-          <!-- Right side view frame -->
-          <div class="showcase-viewer">
-            <div class="image-frame">
-              <div class="frame-bar">
-                <span class="frame-dots" aria-hidden="true"><span></span><span></span><span></span></span>
-                <span class="frame-url">localhost:7731</span>
-              </div>
-              <div class="frame-body">
-                <img src="images/ss-01-dashboard-events.png" id="showcase-image" width="1400" height="900" decoding="async" alt="llm-fw dashboard screenshot" loading="lazy">
-              </div>
-            </div>
-            <p class="viewer-desc" id="viewer-description">
-              Events feed: intercepted requests appear as they happen, tagged with the stage that caught them — heuristic, embedding, dos, rag or dlp — and their score.
-            </p>
-          </div>
+  <section class="section" id="features">
+    <div class="section-head">
+      <p class="eyebrow">beyond injection</p>
+      <h2>Injection is not the only thing worth stopping</h2>
+    </div>
+    <div class="grid bento">
+      <div class="card" id="bento-dlp">
+        <div class="card-top">
+          <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>
+          <span class="tag">DLP</span>
+        </div>
+        <h3>Outbound secret scanning</h3>
+        <p>52 named credential patterns, covering AWS, GitHub, GitLab, Stripe, Slack, npm, PyPI, Vault, database URIs, private keys and the API keys of every LLM provider, plus Luhn-validated card numbers and US social security numbers. Matches are redacted before the request leaves.</p>
+        <div class="dlp-sim" aria-hidden="true">
+          <span class="dlp-label">AWS_SECRET_ACCESS_KEY = </span>
+          <span class="dlp-redacted">[REDACTED_AWS_SECRET_KEY]</span>
         </div>
       </div>
-    </section>
+      <div class="card" id="bento-dos">
+        <div class="card-top">
+          <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg></span>
+          <span class="tag">BUDGET</span>
+        </div>
+        <h3>Cost and loop circuit breaker</h3>
+        <p>Behavioural rate limiting on tokens and requests, and a breaker for the failure mode that empties a budget overnight: an agent stuck in a loop, resending near-identical payloads until someone notices the bill.</p>
+      </div>
+      <div class="card" id="bento-rag">
+        <div class="card-top">
+          <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8M16 17H8"/></svg></span>
+          <span class="tag">RAG</span>
+        </div>
+        <h3>Untrusted content, judged separately</h3>
+        <p>Instructions hidden in retrieved documents, tool results and code fences are scanned as data, not as user intent, and you can set a tighter threshold there than on the prompt surface. Invisible-Unicode smuggling and text rendered into pasted screenshots are decoded and scanned too.</p>
+      </div>
+    </div>
+  </section>
 
-    <!-- Technical Architecture Section -->
-    <section class="architecture-section" id="architecture">
-      <div class="section-container">
-        <div class="architecture-layout">
-          <div class="architecture-info">
-            <h2 class="section-title">A proxy your tools already know how to use</h2>
-            <p class="section-description">
-              Point <code>HTTPS_PROXY</code> at <code>127.0.0.1:8080</code> and every SDK, CLI and agent that respects it is covered. No SDK wrapper, no code change.
-            </p>
-            <ul class="architecture-features-list">
-              <li><strong>Local certificate authority</strong>: setup generates a root CA and registers it in your OS trust store, so TLS can be terminated and inspected locally.</li>
-              <li><strong>OS-level sinkhole</strong>: for Node.js and native binaries that ignore proxy variables, a hosts entry plus a <code>:443</code> port redirect brings them in anyway.</li>
-              <li><strong>No cloud dependency</strong>: no API keys, no accounts, no telemetry. Detection models run on your CPU and the event log stays on disk.</li>
-            </ul>
-          </div>
+  <section class="section" id="licensing">
+    <div class="section-head">
+      <p class="eyebrow">licensing</p>
+      <h2>Free for noncommercial use, paid for company use</h2>
+      <p>llm-fw is not open source. The same package does both jobs; what you buy is the right to use it commercially.</p>
+    </div>
+    <div class="grid two">
+      <div class="card plan">
+        <h3>Noncommercial</h3>
+        <p class="price-line">Free</p>
+        <p>No key, no signup, no telemetry.</p>
+        <ul class="checks">
+          <li>Personal projects, hobby work and private study</li>
+          <li>Research and teaching</li>
+          <li>Charities, schools, public research bodies and government</li>
+          <li>Every feature, nothing held back behind the paid tier</li>
+        </ul>
+        <a class="btn btn-ghost" href="#setup">Install it</a>
+      </div>
+      <div class="card plan hot">
+        <h3>Commercial</h3>
+        <p class="price-line">From &euro;450<small>/ year</small></p>
+        <p>Priced by team size. One licence covers everyone.</p>
+        <ul class="checks">
+          <li>Company machines, CI, and <code>--standalone</code> as a shared team proxy</li>
+          <li>No per-seat keys and no seat counting</li>
+          <li>Priority support and an invoice if you need one</li>
+          <li>Cancel any time; the licence runs to the end of the term</li>
+        </ul>
+        <a class="btn btn-primary" href="#tiers">See the tiers
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+        </a>
+      </div>
+    </div>
 
-          <div class="architecture-graphic">
-            <div class="graphic-frame">
-              <img src="images/infographics-llm-fw.jpg" width="1024" height="1024" decoding="async" alt="Diagram of llm-fw sitting between local tools and LLM provider APIs" loading="lazy">
-            </div>
-          </div>
+    <p class="note"><strong>Which one applies to you.</strong>
+      The <a href="https://polyformproject.org/licenses/noncommercial/1.0.0" rel="noopener">PolyForm Noncommercial License 1.0.0</a>
+      does not grant commercial use. If llm-fw runs anywhere in a for-profit organisation's
+      work you need a commercial licence, including on a single developer's laptop, in CI,
+      and on a shared standalone server. Embedding or redistributing llm-fw inside a product
+      you sell needs an OEM agreement rather than a standard licence.</p>
+
+    <div class="section-head" id="tiers" style="margin-top: 56px">
+      <h2>Commercial tiers</h2>
+      <p>The developer count is the number of developers whose traffic llm-fw inspects. Billed yearly.</p>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th scope="col">Developers</th><th scope="col">Price per year</th><th scope="col" class="buy-col"></th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">1 to 9</th>
+            <td class="price" data-tier-key="t1">&euro;450</td>
+            <td class="buy-col"><button class="buy" type="button" data-tier-key="t1" data-tier="1 to 9 developers">Buy</button></td>
+          </tr>
+          <tr>
+            <th scope="row">10 to 49</th>
+            <td class="price" data-tier-key="t2">&euro;1,500</td>
+            <td class="buy-col"><button class="buy" type="button" data-tier-key="t2" data-tier="10 to 49 developers">Buy</button></td>
+          </tr>
+          <tr>
+            <th scope="row">50 to 199</th>
+            <td class="price" data-tier-key="t3">&euro;4,000</td>
+            <td class="buy-col"><button class="buy" type="button" data-tier-key="t3" data-tier="50 to 199 developers">Buy</button></td>
+          </tr>
+          <tr>
+            <th scope="row">200+</th>
+            <td class="price" data-tier-key="t4">&euro;9,000</td>
+            <td class="buy-col"><button class="buy" type="button" data-tier-key="t4" data-tier="200+ developers">Buy</button></td>
+          </tr>
+          <tr>
+            <th scope="row">OEM / redistribution</th>
+            <td class="price">from &euro;15,000, negotiated</td>
+            <td class="buy-col"><a class="buy buy-link" href="mailto:peter.isberg@deversity.se?subject=llm-fw%20OEM%20licence">Email</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p id="checkout-status" class="note warn" role="status" hidden></p>
+
+    <p class="sub">Checkout is handled by Paddle, our merchant of record, which acts as the seller of
+      record and handles VAT and sales tax. PayPal and card are both accepted at checkout.
+      Prices exclude tax; it is added at checkout, and shown in your local currency where
+      Paddle supports it. Your licence key is sent by email after purchase. It is issued by
+      hand, so please allow one business day.</p>
+    <p class="sub">Prefer an invoice or a purchase order, or want to talk first?
+      <a href="mailto:peter.isberg@deversity.se?subject=llm-fw%20licence">Email us</a>.
+      Read the <a href="/terms.html">terms</a> and the <a href="/refunds.html">refund policy</a>.</p>
+  </section>
+
+  <section class="section" id="setup">
+    <div class="setup-layout">
+      <div>
+        <div class="section-head">
+          <p class="eyebrow">quick installation</p>
+          <h2>Three commands</h2>
+          <p><code>setup</code> generates the local CA and registers it in your trust store; the
+          sinkhole step needs administrator rights, and <code>--proxy-only</code> skips it.</p>
+          <p>Node.js 22 or newer. Windows, macOS and Linux.</p>
         </div>
       </div>
-    </section>
-
-    <!-- Defense Pipeline Section -->
-    <section class="pipeline-section" id="pipeline">
-      <div class="section-container">
-        <span class="eyebrow">Three-Stage Defense</span>
-        <h2 class="section-title">Cheap checks first, expensive ones only when needed</h2>
-        <p class="section-description">
-          A prompt falls through three stages. Most traffic never reaches stage two.
-        </p>
-
-        <div class="pipeline-grid">
-          <!-- Stage 1 -->
-          <div class="pipeline-card">
-            <div class="stage-number">01</div>
-            <h3 class="card-title">Heuristic scoring</h3>
-            <span class="stage-badge speed">&lt; 1ms</span>
-            <p class="card-text">
-              Weighted phrase matching over a normalisation pass built to survive evasion: spacing, case, homoglyphs and leetspeak, plus decoding of base64, base32, hex, binary, morse, ROT13, URL-encoding and reversed text back to plaintext.
-            </p>
-          </div>
-
-          <!-- Stage 2 -->
-          <div class="pipeline-card">
-            <div class="stage-number">02</div>
-            <h3 class="card-title">Cross-lingual embeddings</h3>
-            <span class="stage-badge speed">&lt; 20ms warm</span>
-            <p class="card-text">
-              Cosine similarity against canonical injection-intent anchors using a local <code>multilingual-e5-small</code> ONNX model. Because the encoder aligns around 100 languages, an injection written in Urdu or Thai lands near the English anchors with no rule written for it.
-            </p>
-          </div>
-
-          <!-- Stage 3 -->
-          <div class="pipeline-card">
-            <div class="stage-number">03</div>
-            <h3 class="card-title">Local LLM judge</h3>
-            <span class="stage-badge mode">Opt-in</span>
-            <p class="card-text">
-              A local Ollama model — <code>qwen2.5:3b</code> by default — reasons about intent on the prompts the cheap stages are unsure about. An opt-in ONNX classifier can take that role instead, with no Ollama required.
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Bento Grid Section -->
-    <section class="bento-section" id="features">
-      <div class="section-container">
-        <h2 class="section-title">Injection is not the only thing worth stopping</h2>
-
-        <div class="bento-grid">
-          <!-- Cell 1: DLP -->
-          <div class="bento-card border-glow" id="bento-dlp">
-            <div class="card-icon">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-              </svg>
-            </div>
-            <h3 class="card-title">Outbound secret scanning</h3>
-            <p class="card-text">
-              52 named credential patterns — AWS, GitHub, GitLab, Stripe, Slack, npm, PyPI, Vault, database URIs, private keys and the API keys of every LLM provider — plus Luhn-validated card numbers and US social security numbers. Matches are redacted before the request leaves.
-            </p>
-            <div class="card-visual">
-              <div class="dlp-sim">
-                <span class="dlp-label">AWS_SECRET_ACCESS_KEY = </span>
-                <span class="dlp-redacted">[REDACTED_AWS_SECRET_KEY]</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Cell 2: Loop protection -->
-          <div class="bento-card bg-accent-dark" id="bento-dos">
-            <div class="card-icon">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
-              </svg>
-            </div>
-            <h3 class="card-title">Cost and loop circuit breaker</h3>
-            <p class="card-text">
-              Behavioural rate limiting on tokens and requests, and a breaker for the failure mode that empties a budget overnight: an agent stuck in a loop, resending near-identical payloads until someone notices the bill.
-            </p>
-          </div>
-
-          <!-- Cell 3: RAG Protection -->
-          <div class="bento-card border-glow" id="bento-rag">
-            <div class="card-icon">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                <polyline points="14 2 14 8 20 8"/>
-                <line x1="16" y1="13" x2="8" y2="13"/>
-                <line x1="16" y1="17" x2="8" y2="17"/>
-              </svg>
-            </div>
-            <h3 class="card-title">Untrusted content, judged separately</h3>
-            <p class="card-text">
-              Instructions hidden in retrieved documents, tool results and code fences are scanned as data, not as user intent — and you can set a tighter threshold there than on the prompt surface. Invisible-Unicode smuggling and text rendered into pasted screenshots are decoded and scanned too.
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Licensing Section -->
-    <section class="pricing-section" id="licensing">
-      <div class="section-container">
-        <h2 class="section-title">Licensing</h2>
-        <p class="section-description">
-          llm-fw is not open source. It is free for noncommercial use, and paid for commercial use.
-        </p>
-
-        <div class="pricing-grid">
-          <!-- Card 1 -->
-          <div class="pricing-card">
-            <div class="pricing-header">
-              <h3 class="tier-name">Noncommercial</h3>
-              <div class="price-value">Free</div>
-              <p class="tier-subtitle">No key, no signup, no telemetry.</p>
-            </div>
-            <ul class="pricing-features">
-              <li>Personal projects, hobby work and private study</li>
-              <li>Research and teaching</li>
-              <li>Charities, schools, public research bodies and government</li>
-              <li>Every feature — nothing is held back behind the paid tier</li>
-            </ul>
-            <a href="#setup" class="pricing-btn secondary-btn" id="btn-personal-setup">Install it</a>
-          </div>
-
-          <!-- Card 2 -->
-          <div class="pricing-card featured">
-            <div class="pricing-header">
-              <h3 class="tier-name">Commercial</h3>
-              <div class="price-value">from &euro;450<span class="period">/ year</span></div>
-              <p class="tier-subtitle">Priced by team size. One licence covers everyone.</p>
-            </div>
-            <ul class="pricing-features">
-              <li>Company machines, CI, and <code>--standalone</code> as a shared team proxy</li>
-              <li>No per-seat keys and no seat counting</li>
-              <li>Priority support and an invoice if you need one</li>
-              <li>Cancel any time; the licence runs to the end of the term</li>
-            </ul>
-            <a href="#tiers" class="pricing-btn primary-btn" id="btn-see-tiers">See the tiers</a>
-          </div>
-        </div>
-
-        <div class="license-boundary">
-          <h3 class="boundary-title">Which one applies to you</h3>
-          <p>
-            The <a href="https://polyformproject.org/licenses/noncommercial/1.0.0" rel="noopener">PolyForm Noncommercial License 1.0.0</a>
-            does not grant commercial use. If llm-fw runs anywhere in a for-profit organisation's
-            work you need a commercial licence — including on a single developer's laptop, in CI,
-            and on a shared standalone server. Embedding or redistributing llm-fw inside a product
-            you sell needs an OEM agreement rather than a standard licence.
-          </p>
-        </div>
-
-        <h3 class="tiers-title" id="tiers">Commercial tiers</h3>
-        <p class="tiers-lede">
-          The developer count is the number of developers whose traffic llm-fw inspects. Billed
-          yearly.
-        </p>
-
-        <div class="table-wrap">
-          <table class="tier-table">
-            <thead>
-              <tr><th scope="col">Developers</th><th scope="col">Price per year</th><th scope="col" class="buy-col"></th></tr>
-            </thead>
-            <tbody>
-              <tr>
-                <th scope="row">1 to 9</th>
-                <td class="price" data-tier-key="t1">&euro;450</td>
-                <td class="buy-col"><button class="buy" type="button" data-tier-key="t1" data-tier="1 to 9 developers">Buy</button></td>
-              </tr>
-              <tr>
-                <th scope="row">10 to 49</th>
-                <td class="price" data-tier-key="t2">&euro;1,500</td>
-                <td class="buy-col"><button class="buy" type="button" data-tier-key="t2" data-tier="10 to 49 developers">Buy</button></td>
-              </tr>
-              <tr>
-                <th scope="row">50 to 199</th>
-                <td class="price" data-tier-key="t3">&euro;4,000</td>
-                <td class="buy-col"><button class="buy" type="button" data-tier-key="t3" data-tier="50 to 199 developers">Buy</button></td>
-              </tr>
-              <tr>
-                <th scope="row">200+</th>
-                <td class="price" data-tier-key="t4">&euro;9,000</td>
-                <td class="buy-col"><button class="buy" type="button" data-tier-key="t4" data-tier="200+ developers">Buy</button></td>
-              </tr>
-              <tr>
-                <th scope="row">OEM / redistribution</th>
-                <td class="price">from &euro;15,000, negotiated</td>
-                <td class="buy-col"><a class="buy buy-link" href="mailto:peter.isberg@deversity.se?subject=llm-fw%20OEM%20licence">Email</a></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <p id="checkout-status" class="checkout-status" role="status" hidden></p>
-
-        <p class="tiers-note">
-          Checkout is handled by Paddle, our merchant of record, which acts as the seller of
-          record and handles VAT and sales tax. PayPal and card are both accepted at checkout.
-          Prices exclude tax; it is added at checkout, and shown in your local currency where
-          Paddle supports it. Your licence key is sent by email after purchase — it is issued by
-          hand, so please allow one business day.
-        </p>
-        <p class="tiers-note">
-          Prefer an invoice or a purchase order, or want to talk first?
-          <a href="mailto:peter.isberg@deversity.se?subject=llm-fw%20licence">Email us</a>.
-          Read the <a href="/terms.html">terms</a> and the <a href="/refunds.html">refund policy</a>.
-        </p>
-      </div>
-    </section>
-
-    <!-- Setup / Command Section -->
-    <section class="setup-section" id="setup">
-      <div class="section-container">
-        <div class="setup-layout">
-          <div class="setup-info">
-            <h2 class="section-title">Quick installation</h2>
-            <p class="section-description">
-              Three commands. <code>setup</code> generates the local CA and registers it in your
-              trust store; the sinkhole step needs administrator rights, and
-              <code>--proxy-only</code> skips it.
-            </p>
-            <p class="section-description">
-              Node.js 22 or newer. Windows, macOS and Linux.
-            </p>
-          </div>
-
-          <div class="code-terminal-block">
-            <div class="terminal-bar">
-              <span class="shell-indicator">BASH</span>
-              <button class="btn-copy" id="btn-copy-code" aria-label="Copy the installation commands">Copy</button>
-            </div>
-            <pre class="code-content"><code id="code-snippet">npm install -g llm-fw
+      <div class="codeblock">
+        <div class="codeblock-bar"><span>bash</span><button class="copy" type="button" aria-label="Copy the installation commands">Copy</button></div>
+<pre><code>npm install -g llm-fw
 llm-fw setup
 llm-fw start</code></pre>
-          </div>
-        </div>
       </div>
-    </section>
-
-    <!-- FAQ Accordion Section -->
-    <section class="faq-section" id="faq">
-      <div class="section-container">
-        <h2 class="section-title">Questions</h2>
-
-        <div class="accordion-list">
-          <!-- Q1 -->
-          <div class="accordion-item" id="faq-item-1">
-            <button class="accordion-trigger" aria-expanded="false" aria-controls="faq-answer-1" id="faq-button-1">
-              <span>Do my prompts or code get uploaded anywhere?</span>
-              <span class="accordion-chevron"></span>
-            </button>
-            <div id="faq-answer-1" class="accordion-content" role="region" aria-labelledby="faq-button-1">
-              <p>No. Heuristics, the ONNX embedding model, the optional judge and the event database all run locally. llm-fw makes no cloud calls of its own and sends no telemetry. The only traffic that leaves is the traffic you were already sending to your LLM provider.</p>
-            </div>
-          </div>
-
-          <!-- Q2 -->
-          <div class="accordion-item" id="faq-item-2">
-            <button class="accordion-trigger" aria-expanded="false" aria-controls="faq-answer-2" id="faq-button-2">
-              <span>Does inspection slow down my requests?</span>
-              <span class="accordion-chevron"></span>
-            </button>
-            <div id="faq-answer-2" class="accordion-content" role="region" aria-labelledby="faq-button-2">
-              <p>The streaming heuristic pass completes in under a millisecond, and clean traffic is forwarded as it streams rather than buffered and re-sent. The embedding stage adds under 20ms once warm, and only runs when the cheap stage is unsure. The optional LLM judge is the slow one, which is why it is opt-in and reserved for the ambiguous middle.</p>
-            </div>
-          </div>
-
-          <!-- Q3 -->
-          <div class="accordion-item" id="faq-item-3">
-            <button class="accordion-trigger" aria-expanded="false" aria-controls="faq-answer-3" id="faq-button-3">
-              <span>How does it read encrypted traffic?</span>
-              <span class="accordion-chevron"></span>
-            </button>
-            <div id="faq-answer-3" class="accordion-content" role="region" aria-labelledby="faq-button-3">
-              <p><code>llm-fw setup</code> generates a root certificate authority on your machine and registers it in the OS trust store, which lets the proxy terminate TLS locally, inspect the request, and re-establish it upstream. The CA private key never leaves the machine. <code>llm-fw uninstall</code> removes it from the trust store again.</p>
-            </div>
-          </div>
-
-          <!-- Q4 -->
-          <div class="accordion-item" id="faq-item-4">
-            <button class="accordion-trigger" aria-expanded="false" aria-controls="faq-answer-4" id="faq-button-4">
-              <span>What happens if it blocks something it shouldn't?</span>
-              <span class="accordion-chevron"></span>
-            </button>
-            <div id="faq-answer-4" class="accordion-content" role="region" aria-labelledby="faq-button-4">
-              <p>The blocked request appears in the dashboard with the rule that matched and the score it got. Marking it a false positive records it; on a blocked prompt you can also suppress future matches, which downgrades an identical prompt to a warning instead of a block. Thresholds are configurable per surface, so you can run tighter on tool output than on typed prompts.</p>
-            </div>
-          </div>
-
-          <!-- Q5 -->
-          <div class="accordion-item" id="faq-item-5">
-            <button class="accordion-trigger" aria-expanded="false" aria-controls="faq-answer-5" id="faq-button-5">
-              <span>I work at a company. Can I use the free licence?</span>
-              <span class="accordion-chevron"></span>
-            </button>
-            <div id="faq-answer-5" class="accordion-content" role="region" aria-labelledby="faq-button-5">
-              <p>Not if the work is commercial. PolyForm Noncommercial covers personal projects, study, research, teaching, charities, schools, public research bodies and government institutions. Running llm-fw as part of a for-profit company's work is commercial use — even on one laptop, even in CI — and needs a <a href="#tiers">commercial licence</a>. Evaluating it before you buy is fine; email us if you want longer than a couple of weeks.</p>
-            </div>
-          </div>
-
-          <!-- Q6 -->
-          <div class="accordion-item" id="faq-item-6">
-            <button class="accordion-trigger" aria-expanded="false" aria-controls="faq-answer-6" id="faq-button-6">
-              <span>Is anything different in the paid version?</span>
-              <span class="accordion-chevron"></span>
-            </button>
-            <div id="faq-answer-6" class="accordion-content" role="region" aria-labelledby="faq-button-6">
-              <p>No. It is the same software from the same npm package, with every feature available either way. What you buy is the right to use it commercially, plus priority support. Nothing is crippled to sell an upgrade, and there is no phone-home check.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-  </main>
-
-  <!-- Footer -->
-  <footer class="footer-root">
-    <div class="footer-container">
-      <div class="footer-left">
-        <p class="footer-copyright">&copy; 2026 Deversity AB (Org.nr 559303-2278), Sweden</p>
-        <p class="footer-license">llm-fw is licensed under the PolyForm Noncommercial License 1.0.0. Required Notice: Copyright 2026 Peter Isberg.</p>
-      </div>
-      <nav class="footer-right" aria-label="Footer">
-        <a href="https://github.com/PIsberg/llm-fw" class="footer-link" rel="noopener">GitHub</a>
-        <a href="/terms.html" class="footer-link">Terms</a>
-        <a href="/privacy.html" class="footer-link">Privacy</a>
-        <a href="/refunds.html" class="footer-link">Refunds</a>
-        <a href="/" class="footer-link">Deversity</a>
-        <a href="mailto:peter.isberg@deversity.se" class="footer-link">Contact</a>
-      </nav>
     </div>
-  </footer>
+  </section>
 
-  <script src="https://cdn.paddle.com/paddle/v2/paddle.js"></script>
-  <script src="app.js"></script>
+  <section class="section" id="faq">
+    <div class="section-head">
+      <p class="eyebrow">faq</p>
+      <h2>Questions</h2>
+    </div>
+    <div class="faq">
+      <details>
+        <summary>Do my prompts or code get uploaded anywhere?</summary>
+        <p>No. Heuristics, the ONNX embedding model, the optional judge and the event database all run locally. llm-fw makes no cloud calls of its own and sends no telemetry. The only traffic that leaves is the traffic you were already sending to your LLM provider.</p>
+      </details>
+      <details>
+        <summary>Does inspection slow down my requests?</summary>
+        <p>The streaming heuristic pass completes in under a millisecond, and clean traffic is forwarded as it streams rather than buffered and re-sent. The embedding stage adds under 20ms once warm, and only runs when the cheap stage is unsure. The optional LLM judge is the slow one, which is why it is opt-in and reserved for the ambiguous middle.</p>
+      </details>
+      <details>
+        <summary>How does it read encrypted traffic?</summary>
+        <p><code>llm-fw setup</code> generates a root certificate authority on your machine and registers it in the OS trust store, which lets the proxy terminate TLS locally, inspect the request, and re-establish it upstream. The CA private key never leaves the machine. <code>llm-fw uninstall</code> removes it from the trust store again.</p>
+      </details>
+      <details>
+        <summary>What happens if it blocks something it shouldn't?</summary>
+        <p>The blocked request appears in the dashboard with the rule that matched and the score it got. Marking it a false positive records it; on a blocked prompt you can also suppress future matches, which downgrades an identical prompt to a warning instead of a block. Thresholds are configurable per surface, so you can run tighter on tool output than on typed prompts.</p>
+      </details>
+      <details>
+        <summary>I work at a company. Can I use the free licence?</summary>
+        <p>Not if the work is commercial. PolyForm Noncommercial covers personal projects, study, research, teaching, charities, schools, public research bodies and government institutions. Running llm-fw as part of a for-profit company's work is commercial use, even on one laptop, even in CI, and needs a <a href="#tiers">commercial licence</a>. Evaluating it before you buy is fine; email us if you want longer than a couple of weeks.</p>
+      </details>
+      <details>
+        <summary>Is anything different in the paid version?</summary>
+        <p>No. It is the same software from the same npm package, with every feature available either way. What you buy is the right to use it commercially, plus priority support. Nothing is crippled to sell an upgrade, and there is no phone-home check.</p>
+      </details>
+    </div>
+  </section>
+
+  <section class="cta-band" aria-labelledby="cta-title">
+    <h2 id="cta-title">Put a firewall between your tools and the model</h2>
+    <p>Three commands on your own machine. Free for noncommercial use; one licence covers a whole company.</p>
+    <div class="actions">
+      <a class="btn btn-primary" href="#setup">Install llm-fw</a>
+      <a class="btn btn-ghost" href="#tiers">Commercial tiers</a>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-foot">
+  <div class="wrap foot-grid">
+    <div class="foot-brand">
+      <a class="brand" href="/">
+        <svg class="mark" viewBox="0 0 64 64" aria-hidden="true"><rect x="2" y="2" width="60" height="60" rx="14" fill="none" stroke="currentColor" opacity="0.35" stroke-width="4"/><path d="M22 17h11a15 15 0 0 1 0 30H22z" fill="none" stroke="currentColor" stroke-width="6" stroke-linejoin="round"/></svg>
+        Deversity
+      </a>
+      <p>Developer tooling from Sweden: concurrency testing for the JVM, a local firewall for LLM traffic, and AI guardrails compiled from your source.</p>
+      <p class="foot-contact">Deversity AB &middot; Org.nr 559303-2278<br><a href="mailto:peter.isberg@deversity.se">peter.isberg@deversity.se</a></p>
+    </div>
+    <div class="foot-col">
+      <h4>Products</h4>
+      <a href="/">async-test-lib</a>
+      <a href="/llmfw/">llm-fw</a>
+      <a href="/vibetags/">VibeTags</a>
+    </div>
+    <div class="foot-col">
+      <h4>llm-fw</h4>
+      <a href="https://github.com/PIsberg/llm-fw" rel="noopener">GitHub</a>
+      <a href="https://github.com/PIsberg/llm-fw/blob/main/docs/SCORECARD.md" rel="noopener">Detection scorecard</a>
+      <a href="#tiers">Licensing</a>
+    </div>
+    <div class="foot-col">
+      <h4>Legal</h4>
+      <a href="/terms.html">Terms of Service</a>
+      <a href="/privacy.html">Privacy Notice</a>
+      <a href="/refunds.html">Refund Policy</a>
+    </div>
+  </div>
+  <div class="foot-bar">
+    <div class="wrap">
+      <span>&copy; 2026 Deversity AB (Org.nr 559303-2278), Sweden</span>
+      <span>llm-fw is licensed under the PolyForm Noncommercial License 1.0.0. Required Notice: Copyright 2026 Peter Isberg.</span>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdn.paddle.com/paddle/v2/paddle.js"></script>
+<script src="/assets/site.js"></script>
+<script src="app.js"></script>
 </body>
 </html>

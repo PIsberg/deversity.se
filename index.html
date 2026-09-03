@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="Deversity builds async-test-lib, a JUnit 5 extension that stress-tests JVM code under maximum thread contention and reports race conditions, deadlocks, missed signals, and more.">
-<meta name="theme-color" content="#0a0f16">
+<meta name="theme-color" content="#0a0e14">
 <link rel="canonical" href="https://deversity.se/">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://deversity.se/">
@@ -19,34 +19,47 @@
 <meta property="og:image:alt" content="Deversity: concurrency bugs, forced out of hiding">
 <meta name="twitter:image" content="https://deversity.se/assets/og/og-deversity.png">
 <title>Deversity - Concurrency testing for the JVM</title>
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230a0f16'/%3E%3Cpath d='M22 17h11a15 15 0 0 1 0 30H22z' fill='none' stroke='%233ecf8e' stroke-width='6' stroke-linejoin='round'/%3E%3C/svg%3E">
-<link rel="stylesheet" href="assets/site.css">
-<link rel="stylesheet" href="assets/mascot.css">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230a0e14'/%3E%3Cpath d='M22 17h11a15 15 0 0 1 0 30H22z' fill='none' stroke='%233ecf8e' stroke-width='6' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="preload" href="/assets/fonts/Inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/JetBrainsMono-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/site.css">
+<link rel="stylesheet" href="/assets/mascot.css">
+<script>document.documentElement.classList.add('js');</script>
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
 <header class="site-head">
-  <nav class="nav">
+  <nav class="nav wrap" aria-label="Main">
     <a class="brand" href="/" aria-current="page">
-      <svg class="mark" width="20" height="20" viewBox="0 0 64 64" aria-hidden="true"><rect x="2" y="2" width="60" height="60" rx="14" fill="none" stroke="currentColor" opacity="0.35" stroke-width="4"/><path d="M22 17h11a15 15 0 0 1 0 30H22z" fill="none" stroke="currentColor" stroke-width="6" stroke-linejoin="round"/></svg>
+      <svg class="mark" viewBox="0 0 64 64" aria-hidden="true"><rect x="2" y="2" width="60" height="60" rx="14" fill="none" stroke="currentColor" opacity="0.35" stroke-width="4"/><path d="M22 17h11a15 15 0 0 1 0 30H22z" fill="none" stroke="currentColor" stroke-width="6" stroke-linejoin="round"/></svg>
       Deversity
     </a>
-    <div class="nav-links">
-      <a href="llmfw/">llm-fw</a>
-      <a href="vibetags/">VibeTags</a>
-      <a href="pricing.html">Pricing</a>
-      <a href="terms.html">Terms</a>
-      <a href="privacy.html">Privacy</a>
-      <a href="refunds.html">Refunds</a>
-      <a href="https://github.com/PIsberg/async-test-lib">GitHub</a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-menu" aria-label="Menu">
+      <svg class="bars" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M3 6h14M3 10h14M3 14h14"/></svg>
+      <svg class="x" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M5 5l10 10M15 5L5 15"/></svg>
+    </button>
+    <div class="nav-menu" id="nav-menu">
+      <div class="nav-links">
+        <a href="/" aria-current="page">async-test-lib</a>
+        <a href="/llmfw/">llm-fw</a>
+        <a href="/vibetags/">VibeTags</a>
+        <a href="/pricing.html">Pricing</a>
+      </div>
+      <div class="nav-actions">
+        <a class="btn btn-ghost btn-sm" href="https://github.com/PIsberg">
+          <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+          GitHub
+        </a>
+      </div>
     </div>
   </nav>
 </header>
-<main class="mkt" id="main">
+
+<main class="wrap" id="main">
 
   <section class="hero">
     <div class="hero-copy">
-      <p class="eyebrow">// developer tooling for the JVM</p>
+      <p class="eyebrow">developer tooling for the JVM</p>
       <h1>Concurrency bugs,<br><span class="hl">forced out of hiding.</span></h1>
       <p class="lede">Deversity builds and maintains
       <a href="https://github.com/PIsberg/async-test-lib">async-test-lib</a>, a JUnit&nbsp;5
@@ -55,10 +68,20 @@
       the threads to collide, and reports what more than a hundred concurrency detectors
       observed.</p>
       <div class="actions">
-        <a class="cta" href="pricing.html">See pricing</a>
-        <a class="ghost" href="https://github.com/PIsberg/async-test-lib">View on GitHub</a>
+        <a class="btn btn-primary" href="/pricing.html">See pricing
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+        </a>
+        <a class="btn btn-ghost" href="https://github.com/PIsberg/async-test-lib">
+          <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+          View on GitHub
+        </a>
       </div>
-      <p class="hero-meta">JUnit 5 extension &middot; 100+ detectors &middot; Free for non-commercial use</p>
+      <ul class="ticks" aria-label="At a glance">
+        <li>JUnit 5 extension</li>
+        <li>100+ detectors</li>
+        <li>Java 21 and newer</li>
+        <li>Free for non-commercial use</li>
+      </ul>
     </div>
     <figure class="term" role="img" aria-label="Example: an AsyncTest run reporting a race condition">
       <figcaption class="term-bar">
@@ -71,9 +94,9 @@
     account.transfer(from, to, <span class="num">100</span>);
 }</code></pre>
       <div class="term-report">
-        <p class="rep-line fail"><span>&#x2717; race condition</span>lost update on <code>Account.balance</code>, round 231</p>
-        <p class="rep-line fail"><span>&#x2717; unsafe publication</span><code>Account</code> visible before fully constructed</p>
-        <p class="rep-line ok"><span>&#x2713; contention</span>8 threads &times; 500 rounds, 100+ detectors watching</p>
+        <p class="rep-line fail"><span>&#x2717; race condition</span><span>lost update on <code>Account.balance</code>, round 231</span></p>
+        <p class="rep-line fail"><span>&#x2717; unsafe publication</span><span><code>Account</code> visible before fully constructed</span></p>
+        <p class="rep-line ok"><span>&#x2713; contention</span><span>8 threads &times; 500 rounds, 100+ detectors watching</span></p>
       </div>
     </figure>
   </section>
@@ -84,12 +107,16 @@
     <div><strong>N &times; M</strong><span>threads &times; rounds, forced to collide</span></div>
   </section>
 
-  <section>
-    <h2>What it catches</h2>
-    <div class="grid catch">
+  <section class="section" id="catches">
+    <div class="section-head">
+      <p class="eyebrow">what it catches</p>
+      <h2>The bugs that pass every sequential test</h2>
+      <p>Four of the most common shapes, from a suite of more than a hundred detectors.</p>
+    </div>
+    <div class="grid">
       <div class="card cat-race">
         <div class="card-top">
-          <span class="ico" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h13"/><path d="M13 4l4 4-4 4"/><path d="M21 16H8"/><path d="M11 12l-4 4 4 4"/></svg></span>
+          <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h13"/><path d="M13 4l4 4-4 4"/><path d="M21 16H8"/><path d="M11 12l-4 4 4 4"/></svg></span>
           <span class="tag">RACE</span>
         </div>
         <h3>Race conditions</h3>
@@ -97,7 +124,7 @@
       </div>
       <div class="card cat-lock">
         <div class="card-top">
-          <span class="ico" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="12" r="5.5"/><circle cx="15" cy="12" r="5.5"/></svg></span>
+          <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="12" r="5.5"/><circle cx="15" cy="12" r="5.5"/></svg></span>
           <span class="tag">DEADLOCK</span>
         </div>
         <h3>Deadlocks</h3>
@@ -105,7 +132,7 @@
       </div>
       <div class="card cat-signal">
         <div class="card-top">
-          <span class="ico" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 10a4 4 0 0 1 8 0v3l2 3H6l2-3z"/><path d="M10.5 19.5a1.5 1.5 0 0 0 3 0"/><path d="M4.5 4.5l15 15"/></svg></span>
+          <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 10a4 4 0 0 1 8 0v3l2 3H6l2-3z"/><path d="M10.5 19.5a1.5 1.5 0 0 0 3 0"/><path d="M4.5 4.5l15 15"/></svg></span>
           <span class="tag">SIGNAL</span>
         </div>
         <h3>Missed signals</h3>
@@ -113,19 +140,22 @@
       </div>
       <div class="card cat-pub">
         <div class="card-top">
-          <span class="ico" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 7.6v8.8L12 21l-8-4.6V7.6L12 3"/><path d="M12 3l8 4.6" stroke-dasharray="2.5 3.5"/><path d="M4 7.6l8 4.4 8-4.4"/><path d="M12 12v9"/></svg></span>
+          <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 7.6v8.8L12 21l-8-4.6V7.6L12 3"/><path d="M12 3l8 4.6" stroke-dasharray="2.5 3.5"/><path d="M4 7.6l8 4.4 8-4.4"/><path d="M12 12v9"/></svg></span>
           <span class="tag">PUBLISH</span>
         </div>
         <h3>Unsafe publication</h3>
         <p>Objects visible to other threads before they are fully constructed.</p>
       </div>
     </div>
-    <p class="sub">And more, from a suite of more than a hundred detectors.</p>
   </section>
 
-  <section>
-    <h2>How it works</h2>
-    <div class="grid steps">
+  <section class="section" id="how">
+    <div class="section-head">
+      <p class="eyebrow">how it works</p>
+      <h2>One annotation, one report</h2>
+      <p>No harness to write and no mocks to thread. The extension does the colliding; you read the findings.</p>
+    </div>
+    <div class="grid three steps">
       <div class="card">
         <span class="num">01</span>
         <h3>Annotate</h3>
@@ -144,72 +174,138 @@
     </div>
   </section>
 
-  <section>
-    <h2>How licensing works</h2>
-    <div class="grid lic">
-      <div class="card">
+  <section class="section" id="licensing">
+    <div class="section-head">
+      <p class="eyebrow">licensing</p>
+      <h2>Free to learn on, licensed to ship with</h2>
+      <p>Non-commercial use costs nothing and needs no key. Companies buy one annual licence for the whole team.</p>
+    </div>
+    <div class="grid two">
+      <div class="card plan">
         <h3>Non-commercial</h3>
         <p class="price-line">Free</p>
         <p>async-test-lib is free for non-commercial use under the
         <a href="https://polyformproject.org/licenses/noncommercial/1.0.0/">PolyForm
         Noncommercial License 1.0.0</a>. No license key needed.</p>
+        <ul class="checks">
+          <li>Personal projects, study and research</li>
+          <li>Every detector, nothing held back</li>
+          <li>Developers on free email providers count as non-commercial</li>
+        </ul>
       </div>
-      <div class="card hot">
+      <div class="card plan hot">
         <h3>Commercial</h3>
-        <p class="price-line">Annual license, priced by team size</p>
-        <p>A license covers every developer on your company email domain. There are no
-        per-seat keys.</p>
-        <a class="cta" href="pricing.html">See pricing</a>
+        <p class="price-line">From &euro;250<small>/ year</small></p>
+        <p>Priced by team size. A license covers every developer on your company email domain. There are no per-seat keys.</p>
+        <ul class="checks">
+          <li>One key for the whole team and CI</li>
+          <li>Renews yearly, cancel any time</li>
+          <li>Invoice or purchase order on request</li>
+        </ul>
+        <a class="btn btn-primary" href="/pricing.html">See pricing
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+        </a>
       </div>
     </div>
   </section>
 
-  <section>
-    <h2>Also from Deversity</h2>
-    <div class="grid lic">
-      <div class="card">
-        <h3>llm-fw</h3>
-        <p class="price-line">Local prompt injection firewall</p>
-        <p>A firewall for LLM traffic that runs on your own machine. It intercepts every
-        request your tools make to OpenAI, Anthropic, Gemini and a dozen other providers,
-        blocks prompt injection and jailbreak attempts in real time, redacts leaked
-        credentials, and forwards clean traffic untouched. No cloud calls and no
-        telemetry.</p>
-        <p>Free for non-commercial use under the same PolyForm Noncommercial licence.</p>
-        <a class="cta" href="llmfw/">See llm-fw</a>
+  <section class="section" id="products">
+    <div class="section-head">
+      <p class="eyebrow">from Deversity</p>
+      <h2>Three tools, one habit: check the claim, not the README</h2>
+      <p>Each one turns a thing teams take on trust into a thing the build verifies.</p>
+    </div>
+    <div class="grid products">
+      <div class="card product p-atl">
+        <div class="p-head">
+          <span class="p-mark" aria-hidden="true"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="7" stroke-linejoin="round"><path d="M20 15h12a17 17 0 0 1 0 34H20z"/></svg></span>
+          <div><h3>async-test-lib</h3><span class="p-kind">JUnit 5 extension &middot; Java 21+</span></div>
+        </div>
+        <p>Runs a test body on N threads for M rounds, forces the threads to collide, and reports what more than a hundred concurrency detectors observed.</p>
+        <div class="p-foot">
+          <span class="badge">PolyForm NC &middot; commercial</span>
+          <a class="p-link" href="/pricing.html">Pricing
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+          </a>
+        </div>
       </div>
-      <div class="card">
-        <h3>VibeTags</h3>
-        <p class="price-line">AI guardrails for Java, compiled from your code</p>
-        <p>A compile-time annotation processor that generates the guardrail files AI coding
-        tools read — <code>CLAUDE.md</code>, <code>.cursorrules</code>,
-        <code>copilot-instructions.md</code> and more — from annotations in your Java or
-        Kotlin source. Annotate once; every opted-in tool is regenerated on the next
-        compile. Zero runtime overhead.</p>
-        <p>Free and open source under the MIT license.</p>
-        <a class="cta" href="vibetags/">See VibeTags</a>
+      <div class="card product p-llmfw">
+        <div class="p-head">
+          <span class="p-mark" aria-hidden="true">&lt;/&gt;</span>
+          <div><h3>llm-fw</h3><span class="p-kind">Local proxy &middot; Node.js 22+</span></div>
+        </div>
+        <p>A firewall for LLM traffic that runs on your own machine. It intercepts every request your tools make to OpenAI, Anthropic, Gemini and a dozen other providers, blocks prompt injection in real time, redacts leaked credentials, and forwards clean traffic untouched. No cloud calls and no telemetry.</p>
+        <div class="p-foot">
+          <span class="badge">PolyForm NC &middot; commercial</span>
+          <a class="p-link" href="/llmfw/">See llm-fw
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+          </a>
+        </div>
+      </div>
+      <div class="card product p-vibetags">
+        <div class="p-head">
+          <span class="p-mark" aria-hidden="true">@</span>
+          <div><h3>VibeTags</h3><span class="p-kind">Annotation processor &middot; Java, Kotlin</span></div>
+        </div>
+        <p>A compile-time annotation processor that generates the guardrail files AI coding tools read, <code>CLAUDE.md</code>, <code>.cursorrules</code>, <code>copilot-instructions.md</code> and more, from annotations in your Java or Kotlin source. Annotate once; every opted-in tool is regenerated on the next compile. Zero runtime overhead.</p>
+        <div class="p-foot">
+          <span class="badge">MIT &middot; open source</span>
+          <a class="p-link" href="/vibetags/">See VibeTags
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+          </a>
+        </div>
       </div>
     </div>
   </section>
 
-  <section>
-    <h2>Contact</h2>
-    <p>Deversity AB (Org.nr 559303-2278), a company registered in Sweden.<br>
-    Email: <a href="mailto:peter.isberg@deversity.se">peter.isberg@deversity.se</a></p>
+  <section class="cta-band" aria-labelledby="cta-title">
+    <h2 id="cta-title">Find the bug before your users do</h2>
+    <p>Add the annotation to one flaky test today. It is free for non-commercial use, and a commercial licence covers your whole team.</p>
+    <div class="actions">
+      <a class="btn btn-primary" href="/pricing.html">See pricing</a>
+      <a class="btn btn-ghost" href="mailto:peter.isberg@deversity.se">Talk to us</a>
+    </div>
   </section>
 
 </main>
+
 <footer class="site-foot">
-  <div class="inner">
-    <span>&copy; 2026 Deversity AB (Org.nr 559303-2278), Sweden</span>
-    <nav>
-      <a href="terms.html">Terms</a>
-      <a href="privacy.html">Privacy</a>
-      <a href="refunds.html">Refunds</a>
+  <div class="wrap foot-grid">
+    <div class="foot-brand">
+      <a class="brand" href="/">
+        <svg class="mark" viewBox="0 0 64 64" aria-hidden="true"><rect x="2" y="2" width="60" height="60" rx="14" fill="none" stroke="currentColor" opacity="0.35" stroke-width="4"/><path d="M22 17h11a15 15 0 0 1 0 30H22z" fill="none" stroke="currentColor" stroke-width="6" stroke-linejoin="round"/></svg>
+        Deversity
+      </a>
+      <p>Developer tooling from Sweden: concurrency testing for the JVM, a local firewall for LLM traffic, and AI guardrails compiled from your source.</p>
+      <p class="foot-contact">Deversity AB &middot; Org.nr 559303-2278<br><a href="mailto:peter.isberg@deversity.se">peter.isberg@deversity.se</a></p>
+    </div>
+    <div class="foot-col">
+      <h4>Products</h4>
+      <a href="/">async-test-lib</a>
+      <a href="/llmfw/">llm-fw</a>
+      <a href="/vibetags/">VibeTags</a>
+    </div>
+    <div class="foot-col">
+      <h4>Company</h4>
+      <a href="/pricing.html">Pricing</a>
+      <a href="https://github.com/PIsberg">GitHub</a>
       <a href="mailto:peter.isberg@deversity.se">Contact</a>
-    </nav>
+    </div>
+    <div class="foot-col">
+      <h4>Legal</h4>
+      <a href="/terms.html">Terms of Service</a>
+      <a href="/privacy.html">Privacy Notice</a>
+      <a href="/refunds.html">Refund Policy</a>
+    </div>
+  </div>
+  <div class="foot-bar">
+    <div class="wrap">
+      <span>&copy; 2026 Deversity AB (Org.nr 559303-2278), Sweden</span>
+      <span>Static site. No cookies or analytics of our own.</span>
+    </div>
   </div>
 </footer>
-<script src="assets/mascot.js"></script>
+<script src="/assets/site.js"></script>
+<script src="/assets/mascot.js"></script>
 </body>
 </html>

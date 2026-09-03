@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="Terms of Service for Deversity commercial licenses, covering async-test-lib and llm-fw.">
-<meta name="theme-color" content="#0a0f16">
+<meta name="theme-color" content="#0a0e14">
 <link rel="canonical" href="https://deversity.se/terms.html">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://deversity.se/terms.html">
@@ -18,31 +18,49 @@
 <meta property="og:image:alt" content="Deversity: concurrency bugs, forced out of hiding">
 <meta name="twitter:image" content="https://deversity.se/assets/og/og-deversity.png">
 <title>Terms of Service - Deversity</title>
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230a0f16'/%3E%3Cpath d='M22 17h11a15 15 0 0 1 0 30H22z' fill='none' stroke='%233ecf8e' stroke-width='6' stroke-linejoin='round'/%3E%3C/svg%3E">
-<link rel="stylesheet" href="assets/site.css">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230a0e14'/%3E%3Cpath d='M22 17h11a15 15 0 0 1 0 30H22z' fill='none' stroke='%233ecf8e' stroke-width='6' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="preload" href="/assets/fonts/Inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/JetBrainsMono-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/site.css">
+<script>document.documentElement.classList.add('js');</script>
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
 <header class="site-head">
-  <nav class="nav">
+  <nav class="nav wrap" aria-label="Main">
     <a class="brand" href="/">
-      <svg class="mark" width="20" height="20" viewBox="0 0 64 64" aria-hidden="true"><rect x="2" y="2" width="60" height="60" rx="14" fill="none" stroke="currentColor" opacity="0.35" stroke-width="4"/><path d="M22 17h11a15 15 0 0 1 0 30H22z" fill="none" stroke="currentColor" stroke-width="6" stroke-linejoin="round"/></svg>
+      <svg class="mark" viewBox="0 0 64 64" aria-hidden="true"><rect x="2" y="2" width="60" height="60" rx="14" fill="none" stroke="currentColor" opacity="0.35" stroke-width="4"/><path d="M22 17h11a15 15 0 0 1 0 30H22z" fill="none" stroke="currentColor" stroke-width="6" stroke-linejoin="round"/></svg>
       Deversity
     </a>
-    <div class="nav-links">
-      <a href="llmfw/">llm-fw</a>
-      <a href="vibetags/">VibeTags</a>
-      <a href="pricing.html">Pricing</a>
-      <a class="active" href="terms.html" aria-current="page">Terms</a>
-      <a href="privacy.html">Privacy</a>
-      <a href="refunds.html">Refunds</a>
-      <a href="https://github.com/PIsberg">GitHub</a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-menu" aria-label="Menu">
+      <svg class="bars" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M3 6h14M3 10h14M3 14h14"/></svg>
+      <svg class="x" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M5 5l10 10M15 5L5 15"/></svg>
+    </button>
+    <div class="nav-menu" id="nav-menu">
+      <div class="nav-links">
+        <a href="/">async-test-lib</a>
+        <a href="/llmfw/">llm-fw</a>
+        <a href="/vibetags/">VibeTags</a>
+        <a href="/pricing.html">Pricing</a>
+      </div>
+      <div class="nav-actions">
+        <a class="btn btn-ghost btn-sm" href="https://github.com/PIsberg">
+          <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+          GitHub
+        </a>
+      </div>
     </div>
   </nav>
 </header>
-<main class="prose" id="main">
+
+<main class="wrap prose" id="main">
+  <nav class="legal-tabs" aria-label="Legal documents">
+    <a href="/terms.html" aria-current="page">Terms</a>
+    <a href="/privacy.html">Privacy</a>
+    <a href="/refunds.html">Refunds</a>
+  </nav>
   <h1>Terms of Service</h1>
-  <p class="sub">Last updated: 10 August 2026</p>
+  <p class="meta">Last updated: 10 August 2026</p>
 
   <h2>1. Who we are</h2>
   <p>Deversity AB (Org.nr 559303-2278), a company registered in Sweden ("Deversity", "we"),
@@ -64,8 +82,8 @@
 
   <h2>3. Commercial licenses</h2>
   <p>A commercial license is an annual subscription for one product, priced by team size, as
-  shown on that product's pricing page (<a href="pricing.html">async-test-lib</a>,
-  <a href="llmfw/#tiers">llm-fw</a>). One license covers all developers whose email
+  shown on that product's pricing page (<a href="/pricing.html">async-test-lib</a>,
+  <a href="/llmfw/#tiers">llm-fw</a>). One license covers all developers whose email
   addresses belong to the purchasing company's email domain. The license key identifies your
   subscription and may be shared inside your organization, but not outside it.</p>
 
@@ -101,16 +119,43 @@
   <p>These terms are governed by Swedish law. Disputes are settled by Swedish courts, without
   limiting mandatory consumer protections in your country of residence.</p>
 </main>
+
 <footer class="site-foot">
-  <div class="inner">
-    <span>&copy; 2026 Deversity AB (Org.nr 559303-2278), Sweden</span>
-    <nav>
-      <a href="terms.html">Terms</a>
-      <a href="privacy.html">Privacy</a>
-      <a href="refunds.html">Refunds</a>
+  <div class="wrap foot-grid">
+    <div class="foot-brand">
+      <a class="brand" href="/">
+        <svg class="mark" viewBox="0 0 64 64" aria-hidden="true"><rect x="2" y="2" width="60" height="60" rx="14" fill="none" stroke="currentColor" opacity="0.35" stroke-width="4"/><path d="M22 17h11a15 15 0 0 1 0 30H22z" fill="none" stroke="currentColor" stroke-width="6" stroke-linejoin="round"/></svg>
+        Deversity
+      </a>
+      <p>Developer tooling from Sweden: concurrency testing for the JVM, a local firewall for LLM traffic, and AI guardrails compiled from your source.</p>
+      <p class="foot-contact">Deversity AB &middot; Org.nr 559303-2278<br><a href="mailto:peter.isberg@deversity.se">peter.isberg@deversity.se</a></p>
+    </div>
+    <div class="foot-col">
+      <h4>Products</h4>
+      <a href="/">async-test-lib</a>
+      <a href="/llmfw/">llm-fw</a>
+      <a href="/vibetags/">VibeTags</a>
+    </div>
+    <div class="foot-col">
+      <h4>Company</h4>
+      <a href="/pricing.html">Pricing</a>
+      <a href="https://github.com/PIsberg">GitHub</a>
       <a href="mailto:peter.isberg@deversity.se">Contact</a>
-    </nav>
+    </div>
+    <div class="foot-col">
+      <h4>Legal</h4>
+      <a href="/terms.html">Terms of Service</a>
+      <a href="/privacy.html">Privacy Notice</a>
+      <a href="/refunds.html">Refund Policy</a>
+    </div>
+  </div>
+  <div class="foot-bar">
+    <div class="wrap">
+      <span>&copy; 2026 Deversity AB (Org.nr 559303-2278), Sweden</span>
+      <span>Static site. No cookies or analytics of our own.</span>
+    </div>
   </div>
 </footer>
+<script src="/assets/site.js"></script>
 </body>
 </html>
