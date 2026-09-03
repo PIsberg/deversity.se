@@ -1,0 +1,37 @@
+# The two checks in tools/ only help if something runs them. Both exist because
+# of defects that were invisible in review and invisible in the browser:
+#
+#   * #13 shipped two logo SVGs with a duplicate fill attribute on the root.
+#     An SVG loaded through <img> is parsed as strict XML, so the file failed
+#     to parse and rendered as nothing. No console error, no visible diff.
+#   * The 2026 redesign dropped the Paddle script from pricing.html while
+#     leaving the Buy buttons in place, so the page looked finished and no
+#     button opened a checkout.
+#
+# No path filter on purpose. A filter only helps when the next defect lands in
+# a file we predicted, and neither of these would have matched a guess made
+# before it happened. Both scripts are stdlib-only and finish in a second.
+
+name: checks
+
+on:
+  pull_request:
+  push:
+    branches: [site]
+
+permissions:
+  contents: read
+
+jobs:
+  static-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # No setup-python step: the scripts import only the standard library, and
+      # ubuntu-latest ships python3. One less action to keep current.
+      - name: Logo SVGs parse and render through <img>
+        run: python3 tools/check-logos.py
+
+      - name: Pages close their tags, resolve their assets and keep their wiring
+        run: python3 tools/check-pages.py
