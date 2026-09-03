@@ -57,52 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ==========================================
-  // 2. FAQ accordion
-  // ==========================================
-  const accordionTriggers = document.querySelectorAll('.accordion-trigger');
-  accordionTriggers.forEach(trigger => {
-    trigger.addEventListener('click', () => {
-      const parent = trigger.parentElement;
-      const isOpen = parent.classList.contains('active');
-
-      document.querySelectorAll('.accordion-item').forEach(item => {
-        item.classList.remove('active');
-        item.querySelector('.accordion-trigger').setAttribute('aria-expanded', 'false');
-      });
-
-      if (!isOpen) {
-        parent.classList.add('active');
-        trigger.setAttribute('aria-expanded', 'true');
-      }
-    });
-  });
-
-  // ==========================================
-  // 3. Copy the install snippet
-  // ==========================================
-  const btnCopyCode = document.getElementById('btn-copy-code');
-  if (btnCopyCode) {
-    btnCopyCode.addEventListener('click', async () => {
-      const codeSnippet = document.getElementById('code-snippet').textContent;
-      try {
-        await navigator.clipboard.writeText(codeSnippet);
-        btnCopyCode.textContent = 'Copied';
-        btnCopyCode.style.color = 'var(--color-safe)';
-      } catch {
-        // Clipboard is blocked on insecure origins and by some browser settings.
-        // Say so rather than showing "Copied" over a clipboard that never changed.
-        btnCopyCode.textContent = 'Copy failed';
-        btnCopyCode.style.color = 'var(--color-blocked)';
-      }
-      setTimeout(() => {
-        btnCopyCode.textContent = 'Copy';
-        btnCopyCode.style.color = 'var(--color-text-bright)';
-      }, 2000);
-    });
-  }
-
-  // ==========================================
-  // 4. Commercial licence checkout (Paddle)
+  // 2. Commercial licence checkout (Paddle)
   // ==========================================
   const status = document.getElementById('checkout-status');
   const buyButtons = Array.from(document.querySelectorAll('button.buy[data-tier-key]'));
