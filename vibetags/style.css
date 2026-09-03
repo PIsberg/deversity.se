@@ -66,9 +66,15 @@
 
 /* ---------- Quick start ---------- */
 
+/* One column, not two. The snippets are Maven and Gradle coordinates, and the
+   longest of them is 81 characters; a half-width column here is 482px of text,
+   which fits exactly 60. Side by side, every build file was cut off mid-line at
+   every supported width, and no font size that stays readable closes an 81/60
+   gap. Full width fits 127 characters, so the coordinates stay intact and
+   pasteable. */
 .setup-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 1fr);
   gap: 16px;
   align-items: start;
   margin-bottom: 20px;
@@ -77,9 +83,6 @@
 
 /* ---------- Responsive ---------- */
 
-@media (max-width: 860px) {
-  .setup-grid { grid-template-columns: minmax(0, 1fr); }
-}
 @media (max-width: 700px) {
   .customer-wall { gap: 16px 26px; padding: 22px 16px; }
   .customer-wall li { height: 26px; }
