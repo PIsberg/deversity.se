@@ -29,6 +29,7 @@ PAGES = [
     "terms.html",
     "llmfw/index.html",
     "vibetags/index.html",
+    "claude-light/index.html",
 ]
 
 # Every page shares the header, footer and behaviour in assets/, so every page
@@ -171,8 +172,28 @@ def check(rel):
     return problems
 
 
+def unlisted_pages():
+    """HTML files in the tree that PAGES does not name.
+
+    Every check above runs only on the pages listed, so a new page left out of
+    PAGES passes by never being looked at. Walking the tree makes adding a page
+    without listing it a failure instead of a silent gap.
+    """
+    found = set()
+    for dirpath, dirnames, filenames in os.walk(ROOT):
+        dirnames[:] = [d for d in dirnames if not d.startswith(".")]
+        for name in filenames:
+            if name.endswith(".html"):
+                found.add(os.path.relpath(os.path.join(dirpath, name), ROOT).replace(os.sep, "/"))
+    return sorted(found - set(PAGES))
+
+
 def main():
     failed = 0
+    for rel in unlisted_pages():
+        failed += 1
+        print("FAIL %s" % rel)
+        print("     not in PAGES, so none of these checks run on it")
     for rel in PAGES:
         problems = check(rel)
         if problems:
@@ -182,7 +203,7 @@ def main():
                 print("     %s" % p)
         else:
             print("ok   %s" % rel)
-    print("\n%d page(s) checked, %d failed" % (len(PAGES), failed))
+    print("\n%d page(s) checked, %d failed" % (len(PAGES) + len(unlisted_pages()), failed))
     return 1 if failed else 0
 
 
