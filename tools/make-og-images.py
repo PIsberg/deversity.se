@@ -71,6 +71,20 @@ CARDS = [
         "foot": "deversity.se/vibetags   ·   Free and open source, MIT",
         "mascot": False,
     },
+    {
+        "file": "og-claude-light.png",
+        "bg": "#0a0d12",
+        "accent": "#f0b34e",
+        "ink": "#f1f5f9",
+        "muted": "#94a3b8",
+        "mark": ">_",
+        "wordmark": "claude_light",
+        "headline": ["Ask Claude about your code.", "Send it less."],
+        "sub": "Indexes the repo once, sends each question only the methods that "
+               "answer it, and keeps the rest in the prompt cache.",
+        "foot": "deversity.se/claude-light   ·   Free for noncommercial use",
+        "mascot": False,
+    },
 ]
 
 

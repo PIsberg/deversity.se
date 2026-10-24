@@ -1,0 +1,21 @@
+/* claude_light page. Layers on ../assets/site.css: re-points the accent to the
+   product's amber and adds the one layout only this page has (the single-column
+   quick start). */
+
+:root {
+  --accent: #f0b34e;
+  --accent-bright: #f7cf86;
+  --accent-ink: #1a1204;
+}
+
+/* ---------- Quick start ---------- */
+
+/* One column for the same reason as the VibeTags page: the pipx and uv lines
+   are 70+ characters, and a half-width column cuts them mid-URL. */
+.setup-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
+  margin-bottom: 20px;
+}

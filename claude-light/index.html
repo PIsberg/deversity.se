@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta property="og:site_name" content="Deversity">
+<meta property="og:image" content="https://deversity.se/assets/og/og-claude-light.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="claude_light: ask Claude about your code, send it less">
+<meta name="twitter:image" content="https://deversity.se/assets/og/og-claude-light.png">
+<title>claude_light - Codebase Chat for Claude With Hybrid RAG and Prompt Caching</title>
+<meta name="description" content="claude_light is a terminal chat for asking Claude about a codebase and editing it. It indexes your repository once, sends each question only the methods that matter, and keeps the rest in Anthropic's prompt cache. Free for noncommercial use.">
+<meta name="keywords" content="claude_light, Claude, Anthropic, prompt caching, RAG, code search, CLI, codebase chat, token cost">
+<meta name="author" content="Peter Isberg">
+<meta name="theme-color" content="#0a0e14">
+<link rel="canonical" href="https://deversity.se/claude-light/">
+<meta property="og:title" content="claude_light - Ask Claude About Your Code, Send It Less">
+<meta property="og:description" content="Index the repo once, retrieve per method, cache what does not move. 40 questions on four Python repos cost $1.16 against $5.81 in Claude Code.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://deversity.se/claude-light/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230a0e14'/%3E%3Cpath d='M17 21l12 11-12 11' fill='none' stroke='%23f0b34e' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M33 45h14' stroke='%23f0b34e' stroke-width='6' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="preload" href="/assets/fonts/Inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/JetBrainsMono-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/site.css">
+<link rel="stylesheet" href="style.css">
+<script>document.documentElement.classList.add('js');</script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-head">
+  <nav class="nav wrap" aria-label="Main">
+    <a class="brand" href="/">
+      <svg class="mark" viewBox="0 0 64 64" aria-hidden="true"><rect x="2" y="2" width="60" height="60" rx="14" fill="none" stroke="currentColor" opacity="0.35" stroke-width="4"/><path d="M22 17h11a15 15 0 0 1 0 30H22z" fill="none" stroke="currentColor" stroke-width="6" stroke-linejoin="round"/></svg>
+      Deversity
+    </a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-menu" aria-label="Menu">
+      <svg class="bars" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M3 6h14M3 10h14M3 14h14"/></svg>
+      <svg class="x" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M5 5l10 10M15 5L5 15"/></svg>
+    </button>
+    <div class="nav-menu" id="nav-menu">
+      <div class="nav-links">
+        <a href="/">async-test-lib</a>
+        <a href="/llmfw/">llm-fw</a>
+        <a href="/vibetags/">VibeTags</a>
+        <a href="/claude-light/" aria-current="page">claude_light</a>
+        <a href="/pricing.html">Pricing</a>
+      </div>
+      <div class="nav-actions">
+        <a class="btn btn-ghost btn-sm" href="https://github.com/PIsberg/claude_light">
+          <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+          GitHub
+        </a>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="subnav">
+  <nav class="wrap subnav-inner" aria-label="On this page">
+    <a class="subnav-name" href="#main"><span class="glyph" aria-hidden="true">&gt;_</span>claude_light</a>
+    <div class="subnav-links">
+      <a href="#how">How it works</a>
+      <a href="#benchmark">Benchmark</a>
+      <a href="#features">Features</a>
+      <a href="#licensing">Licensing</a>
+      <a href="#setup">Install</a>
+      <a href="#faq">FAQ</a>
+    </div>
+  </nav>
+</div>
+
+<main class="wrap" id="main">
+
+  <section class="hero" id="hero">
+    <div class="hero-copy">
+      <p class="eyebrow">codebase chat for Claude &middot; Python CLI</p>
+      <h1>Ask Claude about your code.<br><span class="hl">Send it less.</span></h1>
+      <p class="lede">claude_light indexes your repository once, then answers each question with
+      the handful of methods that matter instead of the whole tree. The parts that do not change
+      stay in Anthropic's prompt cache, and simple lookups go to Haiku. On 40 questions across
+      four open-source Python projects it cost $1.16 where Claude Code cost $5.81.</p>
+      <div class="actions">
+        <a class="btn btn-primary" href="#setup">Install it
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+        </a>
+        <a class="btn btn-ghost" href="https://github.com/PIsberg/claude_light">View on GitHub</a>
+      </div>
+      <ul class="ticks" aria-label="At a glance">
+        <li>Free for noncommercial use</li>
+        <li>Python 3.12+</li>
+        <li>Claude subscription or API key</li>
+        <li>Embeddings run locally</li>
+      </ul>
+    </div>
+    <figure class="term" role="img" aria-label="Example session: a question, then /why showing the model it was routed to and the three methods retrieved for it">
+      <figcaption class="term-bar">
+        <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+        <span class="term-title">claude-light &rarr; /why</span>
+        <span class="term-status ok">example</span>
+      </figcaption>
+      <pre class="term-code"><code><span class="cm">&gt;</span> where do we retry a failed request?
+<span class="cm">&hellip; answer streams here &hellip;</span>
+<span class="cm">&gt;</span> <span class="fn">/why</span>
+Routed  : <span class="kw">claude-haiku-5-5</span> &middot; effort=low &middot; budget=1500
+Retrieved 3 chunk(s), floor=60% of top:
+  <span class="num">0.712</span>  (100%)  adapters.py::send
+  <span class="num">0.604</span>  ( 85%)  retry.py::Retry.increment
+  <span class="num">0.471</span>  ( 66%)  sessions.py::Session.send</code></pre>
+      <div class="term-report">
+        <p class="rep-line ok"><span>&#x2713; skeleton</span><span>directory tree and docs, cached for an hour</span></p>
+        <p class="rep-line ok"><span>&#x2713; 3 methods</span><span>sent with their imports, not the 3 files</span></p>
+        <p class="rep-line dim"><span>&#x25CB; Haiku</span><span>a lookup, so not a Sonnet or Opus question</span></p>
+      </div>
+    </figure>
+  </section>
+
+  <section class="stats" style="--cols: 4" aria-label="Key facts">
+    <div><strong>80%</strong><span>lower cost than Claude Code on the same 40 questions</span><small>live runs, 2026-03-23</small></div>
+    <div><strong>1,901</strong><span>median tokens of code sent per question at medium effort</span><small>offline, 35 questions</small></div>
+    <div><strong>6</strong><span>languages chunked per method</span></div>
+    <div><strong>3</strong><span>Claude models, picked per question</span></div>
+  </section>
+
+  <section class="section" id="problem">
+    <div class="section-head">
+      <p class="eyebrow">the problem</p>
+      <h2>Most of what a coding session sends, the model has seen before</h2>
+    </div>
+    <div class="grid three">
+      <div class="card">
+        <h3>Rediscovered every session</h3>
+        <p>A general agent starts each session knowing nothing about the repo, so it reads files
+        through tool calls until it finds the code. Each round trip carries the context that
+        came before it.</p>
+      </div>
+      <div class="card">
+        <h3>Whole files for one method</h3>
+        <p>The answer usually lives in two or three methods. Reading the 1,500-line files they
+        sit in pays for the other 1,400 lines on every turn of the conversation.</p>
+      </div>
+      <div class="card">
+        <h3>The big model for small questions</h3>
+        <p>"Where is this called?" does not need the model you would ask to redesign the module,
+        but a tool that always uses one model bills it at that rate anyway.</p>
+      </div>
+    </div>
+    <p class="punch">claude_light does the finding before the model is involved:
+    the repo is indexed on your machine, each question gets <em>only the methods that answer it</em>,
+    and the model is chosen by what the question needs.</p>
+  </section>
+
+  <section class="section" id="how">
+    <div class="section-head">
+      <p class="eyebrow">how it works</p>
+      <h2>Index once, retrieve per question, cache the rest</h2>
+    </div>
+    <div class="grid three steps">
+      <div class="card">
+        <span class="num">01</span>
+        <h3>Index once</h3>
+        <p>tree-sitter splits source files into one chunk per method, each keeping its
+        imports and class header. A static embedding model indexes them in seconds; a
+        transformer model catches up in the background. Saving a file re-indexes just that file.</p>
+      </div>
+      <div class="card">
+        <span class="num">02</span>
+        <h3>Retrieve per question</h3>
+        <p>Each question pulls only the chunks that clear two floors: a similarity of 0.35, and
+        60% of the best hit. The effort level sets the budget, from 1,500 tokens for a lookup
+        to 9,000 for a design question.</p>
+      </div>
+      <div class="card">
+        <span class="num">03</span>
+        <h3>Cache what does not move</h3>
+        <p>The directory tree and your Markdown docs form a system prompt cached for an hour.
+        Three cache breakpoints mean a follow-up about the same code pays full price only for
+        the new question.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="benchmark">
+    <div class="section-head">
+      <p class="eyebrow">benchmark</p>
+      <h2>Same 10 questions per repo, both tools, real API bills</h2>
+      <p>Claude Code ran each question in a fresh <code>claude --print</code> session using its
+      own tools to find files. claude_light used its index, cache and router.</p>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th scope="col">Repository</th><th scope="col">Size</th><th scope="col">Claude Code</th><th scope="col">claude_light</th><th scope="col">Saved</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row"><code>psf/requests</code> 2.31.0</th><td>108K tokens</td><td>$0.91</td><td>$0.23</td><td>75%</td></tr>
+          <tr><th scope="row"><code>pallets/flask</code> 3.0.0</th><td>144K tokens</td><td>$1.62</td><td>$0.17</td><td>89%</td></tr>
+          <tr><th scope="row"><code>encode/httpx</code> 0.25.2</th><td>191K tokens</td><td>$1.75</td><td>$0.45</td><td>74%</td></tr>
+          <tr><th scope="row"><code>bottlepy/bottle</code> 0.13.2</th><td>92K tokens</td><td>$1.52</td><td>$0.30</td><td>80%</td></tr>
+          <tr><th scope="row">Total, 40 questions</th><td></td><td>$5.81</td><td>$1.16</td><td>80%</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="sub">Live API runs on 2026-03-23. Models and prices have changed since, so treat the
+    ratio as the result, not the dollar amounts. The script ships in the repository
+    (<code>tests/benchmarks/benchmark_claude_code.py</code>) and the
+    <a href="https://github.com/PIsberg/claude_light/blob/main/docs/BENCHMARKS.md">methodology</a>
+    explains what each column counts. Claude Code is a general agent and does far more than
+    answer questions about one repo; this compares the job they share.</p>
+  </section>
+
+  <section class="section" id="features">
+    <div class="section-head">
+      <p class="eyebrow">features</p>
+      <h2>Built for asking, and for the edits that follow</h2>
+    </div>
+    <div class="grid three">
+      <div class="card">
+        <span class="tag">ROUTING</span>
+        <h3>Haiku for lookups, Opus for design</h3>
+        <p>A router scores each question and picks Haiku, Sonnet or Opus with a matching
+        retrieval budget. <code>/why</code> shows the model, the budget and every chunk that
+        was sent, with its score.</p>
+      </div>
+      <div class="card">
+        <span class="tag">EDITS</span>
+        <h3>Changes you approve, commits you can undo</h3>
+        <p>Proposed edits are lint-checked and shown as a diff before anything is written.
+        Approved edits are committed with a <code>Claude:</code> prefix, and <code>/undo</code>
+        reverts the last one without touching your own work.</p>
+      </div>
+      <div class="card">
+        <span class="tag">AUTH</span>
+        <h3>Your subscription or your API key</h3>
+        <p>With a Claude Pro or Team subscription it uses the Claude CLI's login. With an API key
+        it pays per token, and a heartbeat checks every 30 seconds to keep the cache warm through
+        idle spells longer than 4 minutes.</p>
+      </div>
+      <div class="card">
+        <span class="tag">SAFETY</span>
+        <h3>No shell commands unless you allow them</h3>
+        <p>The agent runs nothing by default. <code>--allow-command</code> opens specific prefixes,
+        such as your test runner. Permission rules, hooks and MCP servers inside the repo are
+        ignored, so a cloned repo cannot grant itself commands.</p>
+      </div>
+      <div class="card">
+        <span class="tag">HISTORY</span>
+        <h3>Conversations that stay small</h3>
+        <p>Only the last 6 turns are resent. <code>/compact</code> replaces the conversation
+        with a summary, and <code>/cost</code> shows tokens, cache hit rate and spend for the
+        session.</p>
+      </div>
+      <div class="card">
+        <span class="tag">MEASURED</span>
+        <h3>Savings a build checks</h3>
+        <p>CI fails a change that raises token cost or lowers retrieval quality against committed
+        baselines. The retrieval and routing benchmarks run offline, with no API key and no
+        spend.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="licensing">
+    <div class="section-head">
+      <p class="eyebrow">licensing</p>
+      <h2>Free for noncommercial use, licensed for company use</h2>
+      <p>claude_light is source-available, not open source. The same package does both jobs;
+      what a licence buys is the right to use it commercially.</p>
+    </div>
+    <div class="grid two">
+      <div class="card plan">
+        <h3>Noncommercial</h3>
+        <p class="price-line">Free</p>
+        <p>No key and no signup. Your Claude usage is billed by Anthropic as usual.</p>
+        <ul class="checks">
+          <li>Personal projects, hobby work and private study</li>
+          <li>Research and teaching</li>
+          <li>Charities, schools, public research bodies and government</li>
+          <li>Every feature, nothing held back</li>
+        </ul>
+        <a class="btn btn-ghost" href="#setup">Install it</a>
+      </div>
+      <div class="card plan hot" id="tiers-pending">
+        <h3>Commercial</h3>
+        <p class="price-line">Checkout opening soon</p>
+        <p>Online licences are not on sale yet. Using claude_light for a for-profit company's work
+        needs one, so until checkout opens, email us and we will license you directly.</p>
+        <ul class="checks">
+          <li>Company machines and CI</li>
+          <li>Invoice or purchase order on request</li>
+          <li>Evaluating it at work first is fine</li>
+        </ul>
+        <a class="btn btn-primary" href="mailto:peter.isberg@deversity.se?subject=claude_light%20licence">Email for a licence
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <p class="note"><strong>Which one applies to you.</strong>
+      The <a href="https://polyformproject.org/licenses/noncommercial/1.0.0" rel="noopener">PolyForm Noncommercial License 1.0.0</a>
+      does not grant commercial use. If claude_light runs anywhere in a for-profit organisation's
+      work you need a commercial licence, including on a single developer's laptop.</p>
+
+    <!-- Revealed by app.js once Paddle price IDs are configured. Until then a
+         table of prices nobody can pay would only read as unfinished. -->
+    <div id="tiers-live" hidden>
+      <div class="section-head" id="tiers" style="margin-top: 56px">
+        <h2>Commercial tiers</h2>
+        <p>The developer count is the number of developers who use claude_light. Billed yearly.</p>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th scope="col">Developers</th><th scope="col">Price per year</th><th scope="col" class="buy-col"></th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">1 to 9</th>
+              <td class="price" data-tier-key="t1">&nbsp;</td>
+              <td class="buy-col"><button class="buy" type="button" data-tier-key="t1" data-tier="1 to 9 developers">Buy</button></td>
+            </tr>
+            <tr>
+              <th scope="row">10 to 49</th>
+              <td class="price" data-tier-key="t2">&nbsp;</td>
+              <td class="buy-col"><button class="buy" type="button" data-tier-key="t2" data-tier="10 to 49 developers">Buy</button></td>
+            </tr>
+            <tr>
+              <th scope="row">50 to 199</th>
+              <td class="price" data-tier-key="t3">&nbsp;</td>
+              <td class="buy-col"><button class="buy" type="button" data-tier-key="t3" data-tier="50 to 199 developers">Buy</button></td>
+            </tr>
+            <tr>
+              <th scope="row">200+</th>
+              <td class="price" data-tier-key="t4">&nbsp;</td>
+              <td class="buy-col"><button class="buy" type="button" data-tier-key="t4" data-tier="200+ developers">Buy</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="sub">Checkout is handled by Paddle, our merchant of record, which acts as the seller of
+        record and handles VAT and sales tax. Prices exclude tax; it is added at checkout, and shown
+        in your local currency where Paddle supports it.</p>
+    </div>
+
+    <p id="checkout-status" class="note warn" role="status" hidden></p>
+  </section>
+
+  <section class="section" id="setup">
+    <div class="section-head">
+      <p class="eyebrow">install</p>
+      <h2>Install, sign in, ask</h2>
+    </div>
+    <div class="setup-grid">
+      <div class="codeblock">
+        <div class="codeblock-bar"><span>install as a tool</span><button class="copy" type="button" aria-label="Copy the install commands">Copy</button></div>
+<pre><code>pipx install git+https://github.com/PIsberg/claude_light.git
+<span class="cm"># or</span>
+uv tool install git+https://github.com/PIsberg/claude_light.git</code></pre>
+      </div>
+      <div class="codeblock">
+        <div class="codeblock-bar"><span>sign in, one of the two</span><button class="copy" type="button" aria-label="Copy the sign-in commands">Copy</button></div>
+<pre><code>claude auth login                     <span class="cm"># Claude Pro or Team subscription</span>
+export ANTHROPIC_API_KEY=sk-ant-...   <span class="cm"># or pay per token</span></code></pre>
+      </div>
+      <div class="codeblock">
+        <div class="codeblock-bar"><span>then, from your project root</span><button class="copy" type="button" aria-label="Copy the run commands">Copy</button></div>
+<pre><code>claude-light                                 <span class="cm"># interactive</span>
+claude-light "what does OrderService do?"    <span class="cm"># one-shot, answer on stdout</span></code></pre>
+      </div>
+    </div>
+    <p class="sub">The first install pulls in PyTorch through sentence-transformers, about 1.5 GB.
+    The macOS, Linux and Windows installers, the configuration options and the optional LLMLingua
+    compression are in the <a href="https://github.com/PIsberg/claude_light#readme">README</a>.</p>
+  </section>
+
+  <section class="section" id="faq">
+    <div class="section-head">
+      <p class="eyebrow">faq</p>
+      <h2>Questions</h2>
+    </div>
+    <div class="faq">
+      <details>
+        <summary>Does it replace Claude Code?</summary>
+        <p>No. It is built for one job: questions about a repository and the edits that follow.
+        With a subscription, each turn runs the Claude CLI's own agent with the retrieved code
+        already in its context, so it starts from the right methods instead of searching for them.</p>
+      </details>
+      <details>
+        <summary>What leaves my machine?</summary>
+        <p>What goes to Anthropic: the directory tree and your Markdown files, the chunks retrieved
+        for the question, the question itself and the recent turns. Indexing and embeddings run
+        locally, and the index is stored in <code>.claude_light_cache</code> in your project.</p>
+      </details>
+      <details>
+        <summary>Which languages?</summary>
+        <p>Per-method chunking covers Java, Python, Go, Rust, JavaScript and TypeScript. Without
+        the tree-sitter grammars installed, files are indexed whole.</p>
+      </details>
+      <details>
+        <summary>Do I need a GPU?</summary>
+        <p>No. On a CPU the static model indexes claude_light's own 1,400 chunks in about 2 seconds,
+        so the first question already has context. The transformer model takes about 380 seconds on
+        the same chunks and runs in the background; its vectors are cached.</p>
+      </details>
+      <details>
+        <summary>Is it affiliated with Anthropic?</summary>
+        <p>No. claude_light is an independent tool from Deversity that calls Anthropic's API and the
+        Claude CLI. Your Claude usage is billed by Anthropic under your own account.</p>
+      </details>
+      <details>
+        <summary>License?</summary>
+        <p>PolyForm Noncommercial 1.0.0: free for personal, study, research and other
+        noncommercial use. Company use needs a <a href="#licensing">commercial licence</a>; online
+        checkout is not open yet, so email us in the meantime.</p>
+      </details>
+    </div>
+  </section>
+
+  <section class="cta-band" aria-labelledby="cta-title">
+    <h2 id="cta-title">Stop paying for the same context twice</h2>
+    <p>One install, one sign-in, run it from your project root. Free for noncommercial use.</p>
+    <div class="actions">
+      <a class="btn btn-primary" href="#setup">Install claude_light</a>
+      <a class="btn btn-ghost" href="https://github.com/PIsberg/claude_light">View on GitHub</a>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-foot">
+  <div class="wrap foot-grid">
+    <div class="foot-brand">
+      <a class="brand" href="/">
+        <svg class="mark" viewBox="0 0 64 64" aria-hidden="true"><rect x="2" y="2" width="60" height="60" rx="14" fill="none" stroke="currentColor" opacity="0.35" stroke-width="4"/><path d="M22 17h11a15 15 0 0 1 0 30H22z" fill="none" stroke="currentColor" stroke-width="6" stroke-linejoin="round"/></svg>
+        Deversity
+      </a>
+      <p>Developer tooling from Sweden: concurrency testing for the JVM, a local firewall for LLM traffic, AI guardrails compiled from your source, and a codebase chat that sends Claude less.</p>
+      <p class="foot-contact">Deversity AB &middot; Org.nr 559303-2278<br><a href="mailto:peter.isberg@deversity.se">peter.isberg@deversity.se</a></p>
+    </div>
+    <div class="foot-col">
+      <h4>Products</h4>
+      <a href="/">async-test-lib</a>
+      <a href="/llmfw/">llm-fw</a>
+      <a href="/vibetags/">VibeTags</a>
+      <a href="/claude-light/">claude_light</a>
+    </div>
+    <div class="foot-col">
+      <h4>claude_light</h4>
+      <a href="https://github.com/PIsberg/claude_light" rel="noopener">GitHub</a>
+      <a href="https://github.com/PIsberg/claude_light/blob/main/docs/BENCHMARKS.md" rel="noopener">Benchmarks</a>
+      <a href="#licensing">Licensing</a>
+    </div>
+    <div class="foot-col">
+      <h4>Legal</h4>
+      <a href="/terms.html">Terms of Service</a>
+      <a href="/privacy.html">Privacy Notice</a>
+      <a href="/refunds.html">Refund Policy</a>
+    </div>
+  </div>
+  <div class="foot-bar">
+    <div class="wrap">
+      <span>&copy; 2026 Deversity AB (Org.nr 559303-2278), Sweden</span>
+      <span>claude_light is licensed under the PolyForm Noncommercial License 1.0.0. Required Notice: Copyright Peter Isberg.</span>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdn.paddle.com/paddle/v2/paddle.js"></script>
+<script src="/assets/site.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
