@@ -675,11 +675,14 @@ h3 { font-size: 1.05rem; font-weight: 620; letter-spacing: -0.01em; }
 
 /* ---------- Product cards (homepage family) ---------- */
 
-.products { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+/* Two columns, not three: four products in a row of three leaves one card
+   alone on the second row. */
+.products { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .product { padding: 24px; }
 .product.p-atl      { --accent: #3ecf8e; --accent-bright: #7ce3b8; --accent-ink: #06130c; }
 .product.p-llmfw    { --accent: #2dd4ea; --accent-bright: #7ee8f5; --accent-ink: #04151a; }
 .product.p-vibetags { --accent: #a78bfa; --accent-bright: #c4b5fd; --accent-ink: #130b2a; }
+.product.p-claude-light { --accent: #f0b34e; --accent-bright: #f7cf86; --accent-ink: #1a1204; }
 .product .p-head { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
 .product .p-mark {
   display: grid;
