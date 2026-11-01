@@ -29,8 +29,16 @@ PAGES = [
     "terms.html",
     "llmfw/index.html",
     "vibetags/index.html",
-    "claude-light/index.html",
+    "llm-light/index.html",
 ]
+
+# Old URLs that stay as redirect stubs, mapped to where they now point. The page
+# was live at the old path, so links and search results still use it. A stub is
+# not a page: it has no nav or footer, only a redirect, so it is checked for that
+# and nothing else.
+REDIRECTS = {
+    "claude-light/index.html": "/llm-light/",
+}
 
 # Every page shares the header, footer and behaviour in assets/, so every page
 # has to opt into them the same way.
@@ -185,7 +193,20 @@ def unlisted_pages():
         for name in filenames:
             if name.endswith(".html"):
                 found.add(os.path.relpath(os.path.join(dirpath, name), ROOT).replace(os.sep, "/"))
-    return sorted(found - set(PAGES))
+    return sorted(found - set(PAGES) - set(REDIRECTS))
+
+
+def check_redirect(rel, target):
+    """A redirect stub must send browsers and crawlers to its target."""
+    html = read(rel)
+    problems = []
+    if not re.search(r'<meta http-equiv="refresh" content="0;\s*url=%s"' % re.escape(target), html):
+        problems.append("no <meta http-equiv=\"refresh\"> to %s" % target)
+    if not re.search(r'<link rel="canonical" href="https://deversity\.se%s"' % re.escape(target), html):
+        problems.append("no canonical link to https://deversity.se%s" % target)
+    if not os.path.exists(os.path.join(ROOT, target.lstrip("/"), "index.html")):
+        problems.append("redirects to %s, which has no index.html" % target)
+    return problems
 
 
 def main():
@@ -203,7 +224,17 @@ def main():
                 print("     %s" % p)
         else:
             print("ok   %s" % rel)
-    print("\n%d page(s) checked, %d failed" % (len(PAGES) + len(unlisted_pages()), failed))
+    for rel, target in REDIRECTS.items():
+        problems = check_redirect(rel, target)
+        if problems:
+            failed += 1
+            print("FAIL %s (redirect)" % rel)
+            for p in problems:
+                print("     %s" % p)
+        else:
+            print("ok   %s -> %s" % (rel, target))
+    total = len(PAGES) + len(REDIRECTS) + len(unlisted_pages())
+    print("\n%d page(s) checked, %d failed" % (total, failed))
     return 1 if failed else 0
 
 
