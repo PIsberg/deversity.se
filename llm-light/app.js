@@ -1,10 +1,10 @@
-/* Vanilla JavaScript for the claude_light page. No build step, no dependencies. */
+/* Vanilla JavaScript for the llm-light page. No build step, no dependencies. */
 
 // ============================================================================
 // Paddle configuration: THE ONLY CODE THAT NEEDS EDITING TO GO LIVE
 // ============================================================================
 //
-// claude_light has no Paddle products yet. Every price ID below ends in _UNSET,
+// llm-light has no Paddle products yet. Every price ID below ends in _UNSET,
 // so the tier table stays hidden and the page shows the "checkout not open yet"
 // card instead. Going live:
 //
@@ -14,7 +14,7 @@
 //      replaces it with a localized price when it can; the markup value is what
 //      visitors see when paddle.js is blocked.
 //   3. Rewrite the Commercial card in #licensing, which still says checkout is
-//      not open, and add claude_light to terms.html and refunds.html.
+//      not open, and add llm-light to terms.html and refunds.html.
 //
 // As soon as the token and at least one price ID are set, the table appears
 // and its Buy buttons open a checkout. A tier still left _UNSET degrades to a
@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
     link.className = 'buy buy-link';
     link.textContent = 'Email';
     link.href = 'mailto:' + SUPPORT_EMAIL + '?subject=' +
-      encodeURIComponent('claude_light licence: ' + button.getAttribute('data-tier'));
+      encodeURIComponent('llm-light licence: ' + button.getAttribute('data-tier'));
     button.parentNode.replaceChild(link, button);
   }
 
@@ -126,7 +126,7 @@ document.addEventListener('DOMContentLoaded', () => {
         settings: {
           displayMode: 'overlay',
           theme: 'dark',
-          successUrl: 'https://deversity.se/claude-light/',
+          successUrl: 'https://deversity.se/llm-light/',
         },
       });
     } catch {
