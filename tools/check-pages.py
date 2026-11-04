@@ -177,6 +177,67 @@ def check(rel):
     if orphans:
         problems.append("class names with no rule and no script use: %s" % ", ".join(orphans))
 
+    problems.extend(band_problems(rel, html))
+
+    return problems
+
+
+def band_problems(rel, html):
+    """Tier tables must scale with team size, with no flat open-ended top tier.
+
+    A "200+" row read as one price for any team above 200, so a company of 800
+    could fairly expect to pay what a company of 200 pays. Bands now run without
+    gaps from 1 developer to 999, 1,000 and up is by email, and from 200 up every
+    band adds the same step. A typo in a list price or a skipped band breaks the
+    published ladder without anything looking wrong on the page.
+    """
+    rows = []
+    for row in re.findall(r"<tr>.*?</tr>", html, flags=re.S):
+        tier = re.search(r'<button[^>]*\bdata-tier="([^"]*)"', row)
+        if tier:
+            price = re.search(r'<td class="price"[^>]*>([^<]*)</td>', row)
+            rows.append((tier.group(1), price.group(1) if price else ""))
+    if not rows:
+        return []
+
+    problems = []
+    bands = []
+    for label, price in rows:
+        m = re.fullmatch(r"(\d+) to (\d+) developers", label)
+        if not m:
+            problems.append('tier "%s" is not a closed "N to M developers" band' % label)
+            continue
+        bands.append((int(m.group(1)), int(m.group(2)), price))
+
+    expected = 1
+    for low, high, _price in bands:
+        if low != expected:
+            problems.append("tier bands leave a gap or overlap: expected one to start at "
+                            "%d, found %d to %d" % (expected, low, high))
+        expected = high + 1
+    if expected != 1000:
+        problems.append("tier bands should end at 999, but the next would start at %d" % expected)
+    if not re.search(r"1,000 or more", html):
+        problems.append('no "1,000 or more" row, so a larger team has no route to a price')
+
+    # Pages not yet on sale have blank price cells; there is no ladder to check.
+    amounts = []
+    for low, _high, price in bands:
+        m = re.search(r"([\d,]+)\s*$", price)
+        if low >= 200 and m:
+            amounts.append(int(m.group(1).replace(",", "")))
+    steps = {b - a for a, b in zip(amounts, amounts[1:])}
+    if len(steps) > 1:
+        problems.append("list prices from 200 developers up do not rise by one step: %s" % amounts)
+    elif steps and steps.pop() <= 0:
+        problems.append("list prices from 200 developers up do not rise: %s" % amounts)
+
+    # The label in app.js is what the checkout code knows the tier by.
+    app = os.path.join(ROOT, os.path.dirname(rel), "app.js")
+    if os.path.exists(app):
+        for label in re.findall(r"label: '([^']*\+[^']*)'", open(app, encoding="utf-8").read()):
+            problems.append('%s still has the open-ended label "%s"'
+                            % (os.path.join(os.path.dirname(rel), "app.js"), label))
     return problems
 
 

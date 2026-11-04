@@ -306,7 +306,7 @@ Retrieved 3 chunk(s), floor=60% of top:
     <div id="tiers-live" hidden>
       <div class="section-head" id="tiers" style="margin-top: 56px">
         <h2>Commercial tiers</h2>
-        <p>The developer count is the number of developers who use llm-light. Billed yearly.</p>
+        <p>The developer count is the number of developers who use llm-light. Billed yearly. From 200 developers up, each further 200 moves you to the next band.</p>
       </div>
 
       <div class="table-wrap">
@@ -331,9 +331,29 @@ Retrieved 3 chunk(s), floor=60% of top:
               <td class="buy-col"><button class="buy" type="button" data-tier-key="t3" data-tier="50 to 199 developers">Buy</button></td>
             </tr>
             <tr>
-              <th scope="row">200+</th>
+              <th scope="row">200 to 399</th>
               <td class="price" data-tier-key="t4">&nbsp;</td>
-              <td class="buy-col"><button class="buy" type="button" data-tier-key="t4" data-tier="200+ developers">Buy</button></td>
+              <td class="buy-col"><button class="buy" type="button" data-tier-key="t4" data-tier="200 to 399 developers">Buy</button></td>
+            </tr>
+            <tr>
+              <th scope="row">400 to 599</th>
+              <td class="price" data-tier-key="t5">&nbsp;</td>
+              <td class="buy-col"><button class="buy" type="button" data-tier-key="t5" data-tier="400 to 599 developers">Buy</button></td>
+            </tr>
+            <tr>
+              <th scope="row">600 to 799</th>
+              <td class="price" data-tier-key="t6">&nbsp;</td>
+              <td class="buy-col"><button class="buy" type="button" data-tier-key="t6" data-tier="600 to 799 developers">Buy</button></td>
+            </tr>
+            <tr>
+              <th scope="row">800 to 999</th>
+              <td class="price" data-tier-key="t7">&nbsp;</td>
+              <td class="buy-col"><button class="buy" type="button" data-tier-key="t7" data-tier="800 to 999 developers">Buy</button></td>
+            </tr>
+            <tr>
+              <th scope="row">1,000 or more</th>
+              <td class="price">quoted by email</td>
+              <td class="buy-col"><a class="buy buy-link" href="mailto:peter.isberg@deversity.se?subject=llm-light%20licence%3A%201%2C000%20or%20more%20developers">Email</a></td>
             </tr>
           </tbody>
         </table>
@@ -479,6 +499,7 @@ llm-light "what does OrderService do?"    <span class="cm"># one-shot, answer on
 
 <script src="https://cdn.paddle.com/paddle/v2/paddle.js"></script>
 <script src="/assets/site.js"></script>
+<script src="/assets/tier-prices.js"></script>
 <script src="app.js"></script>
 </body>
 </html>
