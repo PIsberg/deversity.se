@@ -17,16 +17,26 @@
 // PayPal. It then appears inside the same overlay. Nothing here changes.
 const PADDLE = {
   token: 'live_b240a77b002cdcfbfb7907b4783',
+  // The yearly "each further 200 developers" price. Bands from 400 up check out as
+  // the t4 price once plus this one `addons` times. While it is _UNSET those bands
+  // show their list price and offer email instead of Buy.
+  addonPriceId: 'pri_UNSET',
   tiers: {
     t1: { priceId: 'pri_01kzpbz70xs8dg50tbqg84307j', label: '1 to 9 developers' },
     t2: { priceId: 'pri_01kzpcawwhnvcq1n1h572fkams', label: '10 to 49 developers' },
     t3: { priceId: 'pri_01kzpcdd2vvy853nws9np4040j', label: '50 to 199 developers' },
-    t4: { priceId: 'pri_01kzpcfr5hdy0v3hm1x80wcfj0', label: '200+ developers' },
+    t4: { priceId: 'pri_01kzpcfr5hdy0v3hm1x80wcfj0', label: '200 to 399 developers' },
+    t5: { priceId: 'pri_01kzpcfr5hdy0v3hm1x80wcfj0', addons: 1, label: '400 to 599 developers' },
+    t6: { priceId: 'pri_01kzpcfr5hdy0v3hm1x80wcfj0', addons: 2, label: '600 to 799 developers' },
+    t7: { priceId: 'pri_01kzpcfr5hdy0v3hm1x80wcfj0', addons: 3, label: '800 to 999 developers' },
   },
 };
 
 const SUPPORT_EMAIL = 'peter.isberg@deversity.se';
 const isConfigured = (value) => typeof value === 'string' && !value.endsWith('_UNSET');
+// A band sold with add-ons cannot be bought until the add-on price exists too.
+const isOnSale = (tier) => Boolean(tier) && isConfigured(tier.priceId)
+  && (!tier.addons || isConfigured(PADDLE.addonPriceId));
 
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -81,7 +91,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   const unconfigured = buyButtons.filter(
-    button => !isConfigured((PADDLE.tiers[button.getAttribute('data-tier-key')] || {}).priceId)
+    button => !isOnSale(PADDLE.tiers[button.getAttribute('data-tier-key')])
   );
 
   // Paddle's script is loaded from their CDN without Subresource Integrity on
@@ -110,39 +120,27 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     Paddle.Initialize({ token: PADDLE.token });
 
-    // Show Paddle's localized prices where it can detect the visitor's country.
-    // Use `subtotal`, not `total`: the account sells tax-exclusive, so `total`
-    // already includes VAT and would contradict the note promising tax is added
-    // at checkout. On failure the EUR list prices already in the markup stand.
-    const priceCells = Array.from(document.querySelectorAll('.price[data-tier-key]'))
-      .map(cell => ({ cell, priceId: PADDLE.tiers[cell.getAttribute('data-tier-key')]?.priceId }))
-      .filter(entry => isConfigured(entry.priceId));
-
-    if (priceCells.length && Paddle.PricePreview) {
-      Paddle.PricePreview({
-        items: priceCells.map(entry => ({ priceId: entry.priceId, quantity: 1 })),
-      }).then(result => {
-        (result.data.details.lineItems || []).forEach(item => {
-          const entry = priceCells.find(e => e.priceId === item.price.id);
-          if (entry && item.formattedTotals && item.formattedTotals.subtotal) {
-            entry.cell.textContent = item.formattedTotals.subtotal;
-          }
-        });
-      }).catch(() => {
-        // Keep the EUR list prices already rendered in the table.
-      });
-    }
+    // Show Paddle's localized prices where it can detect the visitor's country;
+    // see assets/tier-prices.js.
+    showTierPrices(Array.from(document.querySelectorAll('.price[data-tier-key]'))
+      .map(cell => ({ cell, tier: PADDLE.tiers[cell.getAttribute('data-tier-key')] }))
+      .filter(entry => isOnSale(entry.tier))
+      .map(({ cell, tier }) => ({ cell, priceId: tier.priceId, addons: tier.addons || 0 })),
+    PADDLE.addonPriceId);
 
     document.addEventListener('click', event => {
       const button = event.target.closest('button.buy[data-tier-key]');
       if (!button) return;
 
       const tier = PADDLE.tiers[button.getAttribute('data-tier-key')];
-      if (!tier || !isConfigured(tier.priceId)) return;
+      if (!isOnSale(tier)) return;
+
+      const items = [{ priceId: tier.priceId, quantity: 1 }];
+      if (tier.addons) items.push({ priceId: PADDLE.addonPriceId, quantity: tier.addons });
 
       try {
         Paddle.Checkout.open({
-          items: [{ priceId: tier.priceId, quantity: 1 }],
+          items,
           settings: {
             displayMode: 'overlay',
             theme: 'dark',

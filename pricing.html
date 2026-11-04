@@ -59,13 +59,15 @@
   <section class="hero single">
     <div class="hero-copy">
       <p class="eyebrow">pricing &middot; async-test-lib</p>
-      <h1>One licence,<br><span class="hl">the whole team.</span></h1>
+      <h1>One licence,<br><span class="hl">priced to your team.</span></h1>
       <p class="lede">A commercial async-test-lib license is billed yearly and priced by the number of
-      developers whose builds run it. It covers everyone on your company email domain, with no
-      per-seat keys to hand out. Non-commercial use stays free and needs no key at all.</p>
+      developers whose builds run it, in bands that keep rising with your team: 400, 600, 800
+      developers and beyond. One key covers every developer in your band on your company email
+      domain, with no per-seat keys to hand out. Non-commercial use stays free and needs no key at
+      all.</p>
       <ul class="ticks" aria-label="At a glance">
         <li>Billed yearly, cancel any time</li>
-        <li>Every developer on your domain</li>
+        <li>Every developer in your band</li>
         <li>Card or PayPal via Paddle</li>
         <li>Invoice on request</li>
       </ul>
@@ -95,9 +97,29 @@
           <td class="buy-col"><button class="buy" type="button" data-price-id="pri_01kzdb3tbre6gmtn3ct428hnnh" data-tier="50 to 199 developers">Buy</button></td>
         </tr>
         <tr>
-          <td>200+</td>
+          <td>200 to 399</td>
           <td class="price" data-price-id="pri_01kzdb53cjn6rzhy4da9gent8v" data-fallback="&euro;6,000">&euro;6,000</td>
-          <td class="buy-col"><button class="buy" type="button" data-price-id="pri_01kzdb53cjn6rzhy4da9gent8v" data-tier="200+ developers">Buy</button></td>
+          <td class="buy-col"><button class="buy" type="button" data-price-id="pri_01kzdb53cjn6rzhy4da9gent8v" data-tier="200 to 399 developers">Buy</button></td>
+        </tr>
+        <tr>
+          <td>400 to 599</td>
+          <td class="price" data-price-id="pri_01kzdb53cjn6rzhy4da9gent8v" data-addons="1" data-fallback="&euro;9,000">&euro;9,000</td>
+          <td class="buy-col"><button class="buy" type="button" data-price-id="pri_01kzdb53cjn6rzhy4da9gent8v" data-addons="1" data-tier="400 to 599 developers">Buy</button></td>
+        </tr>
+        <tr>
+          <td>600 to 799</td>
+          <td class="price" data-price-id="pri_01kzdb53cjn6rzhy4da9gent8v" data-addons="2" data-fallback="&euro;12,000">&euro;12,000</td>
+          <td class="buy-col"><button class="buy" type="button" data-price-id="pri_01kzdb53cjn6rzhy4da9gent8v" data-addons="2" data-tier="600 to 799 developers">Buy</button></td>
+        </tr>
+        <tr>
+          <td>800 to 999</td>
+          <td class="price" data-price-id="pri_01kzdb53cjn6rzhy4da9gent8v" data-addons="3" data-fallback="&euro;15,000">&euro;15,000</td>
+          <td class="buy-col"><button class="buy" type="button" data-price-id="pri_01kzdb53cjn6rzhy4da9gent8v" data-addons="3" data-tier="800 to 999 developers">Buy</button></td>
+        </tr>
+        <tr>
+          <td>1,000 or more</td>
+          <td class="price">quoted by email</td>
+          <td class="buy-col"><a class="buy buy-link" href="mailto:peter.isberg@deversity.se?subject=async-test-lib%20license%3A%201%2C000%20or%20more%20developers">Email</a></td>
         </tr>
         <tr>
           <td>OEM / redistribution</td>
@@ -110,7 +132,8 @@
 
     <p id="checkout-status" class="note warn" role="status" hidden></p>
 
-    <p class="sub">Prices exclude tax and are shown in your local currency where Paddle supports it;
+    <p class="sub">From 200 developers up, each further 200 moves you to the next band.
+    Prices exclude tax and are shown in your local currency where Paddle supports it;
     you are charged the amount displayed at checkout. Prefer an invoice, a purchase order, or have
     a question first?
     <a href="mailto:peter.isberg@deversity.se?subject=async-test-lib%20license">Email us</a>.</p>
@@ -124,9 +147,10 @@
     <div class="grid two">
       <div class="card">
         <span class="tag">TEAM</span>
-        <h3>Covers your whole team</h3>
-        <p>One license covers your whole team, with no per-seat keys. The developer count
-        is the number of developers whose builds run async-test-lib. Subscriptions renew yearly
+        <h3>Covers your team, up to your band</h3>
+        <p>One license covers every developer in the band you buy, with no per-seat keys. The
+        developer count is the number of developers whose builds run async-test-lib; if it grows
+        past your band, move up to the band that fits. Subscriptions renew yearly
         and can be cancelled at any time; a cancelled license stays valid until the end of the
         paid term.</p>
       </div>
@@ -212,9 +236,15 @@
 </footer>
 <script src="/assets/site.js"></script>
 <script src="https://cdn.paddle.com/paddle/v2/paddle.js"></script>
+<script src="/assets/tier-prices.js"></script>
 <script>
 (function () {
   var TOKEN = 'live_b240a77b002cdcfbfb7907b4783'; // client-side token: public by design
+  // The yearly "each further 200 developers" price, EUR 3,000. Bands from 400 up
+  // check out as the 200 to 399 price plus this one data-addons times. While this
+  // is _UNSET those bands show their list price and offer email instead of Buy.
+  var ADDON_PRICE_ID = 'pri_UNSET';
+  var addonReady = !/_UNSET$/.test(ADDON_PRICE_ID);
   var status = document.getElementById('checkout-status');
 
   function say(msg) {
@@ -232,35 +262,30 @@
 
   Paddle.Initialize({ token: TOKEN });
 
-  // Localized prices: Paddle detects the customer's country and returns formatted
-  // totals, so there is no currency maths here. Show `subtotal`, not `total`: the
-  // account sells tax-exclusive, so `total` already has VAT added and would
-  // contradict the note below promising tax is added at checkout.
-  var priceCells = Array.prototype.slice.call(document.querySelectorAll('.price[data-price-id]'));
-  if (priceCells.length && Paddle.PricePreview) {
-    Paddle.PricePreview({
-      items: priceCells.map(function (cell) {
-        return { priceId: cell.getAttribute('data-price-id'), quantity: 1 };
-      })
-    }).then(function (result) {
-      (result.data.details.lineItems || []).forEach(function (item) {
-        var cell = document.querySelector('.price[data-price-id="' + item.price.id + '"]');
-        if (cell && item.formattedTotals && item.formattedTotals.subtotal) {
-          cell.textContent = item.formattedTotals.subtotal;
-        }
-      });
-    }).catch(function () {
-      // Keep the EUR list prices already in the markup.
-    });
+  function addonsOf(element) {
+    return parseInt(element.getAttribute('data-addons') || '0', 10);
   }
+
+  if (!addonReady) {
+    Array.prototype.slice.call(document.querySelectorAll('button.buy[data-addons]')).forEach(toEmailLink);
+  }
+
+  // Paddle detects the customer's country; see assets/tier-prices.js.
+  showTierPrices(Array.prototype.slice.call(document.querySelectorAll('.price[data-price-id]'))
+    .filter(function (cell) { return addonReady || !addonsOf(cell); })
+    .map(function (cell) {
+      return { cell: cell, priceId: cell.getAttribute('data-price-id'), addons: addonsOf(cell) };
+    }), ADDON_PRICE_ID);
 
   document.addEventListener('click', function (event) {
     var button = event.target.closest('button.buy');
     if (!button) return;
     var priceId = button.getAttribute('data-price-id');
+    var items = [{ priceId: priceId, quantity: 1 }];
+    if (addonsOf(button)) items.push({ priceId: ADDON_PRICE_ID, quantity: addonsOf(button) });
     try {
       Paddle.Checkout.open({
-        items: [{ priceId: priceId, quantity: 1 }],
+        items: items,
         settings: { displayMode: 'overlay', theme: 'dark', successUrl: 'https://deversity.se/pricing.html' }
       });
     } catch (e) {
@@ -269,14 +294,16 @@
   });
 
   function degradeToEmail() {
-    Array.prototype.slice.call(document.querySelectorAll('button.buy')).forEach(function (button) {
-      var link = document.createElement('a');
-      link.className = 'buy buy-link';
-      link.textContent = 'Email';
-      link.href = 'mailto:peter.isberg@deversity.se?subject=' +
-        encodeURIComponent('async-test-lib license: ' + button.getAttribute('data-tier'));
-      button.parentNode.replaceChild(link, button);
-    });
+    Array.prototype.slice.call(document.querySelectorAll('button.buy')).forEach(toEmailLink);
+  }
+
+  function toEmailLink(button) {
+    var link = document.createElement('a');
+    link.className = 'buy buy-link';
+    link.textContent = 'Email';
+    link.href = 'mailto:peter.isberg@deversity.se?subject=' +
+      encodeURIComponent('async-test-lib license: ' + button.getAttribute('data-tier'));
+    button.parentNode.replaceChild(link, button);
   }
 })();
 </script>
