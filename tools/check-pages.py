@@ -178,7 +178,30 @@ def check(rel):
         problems.append("class names with no rule and no script use: %s" % ", ".join(orphans))
 
     problems.extend(band_problems(rel, html))
+    problems.extend(currency_problems(html))
 
+    return problems
+
+
+def currency_problems(html):
+    """Every euro amount on a page must be one assets/tier-prices.js can convert.
+
+    Paddle localizes the prices it sells, and tier-prices.js converts every other
+    amount carrying data-eur at the same rate. A euro amount typed into the markup
+    without data-eur stays in EUR while the table beside it turns into SEK, which
+    is how the pricing pages came to show two currencies at once. The data-eur
+    value must also match the amount shown, or the converted price is a different
+    number from the list price it replaces.
+    """
+    body = strip_svg_and_code(html)
+    problems = []
+    tagged = re.compile(r'<(\w+)[^>]*\bdata-eur="([^"]*)"[^>]*>(?:&euro;|€)(\d+(?:,\d{3})*)</\1>')
+    for m in tagged.finditer(body):
+        if m.group(2) != m.group(3).replace(",", ""):
+            problems.append('data-eur="%s" on an element showing EUR %s' % (m.group(2), m.group(3)))
+    for m in re.finditer(r"(?:&euro;|€)\s*\d+(?:,\d{3})*", tagged.sub("", body)):
+        problems.append('"%s" has no data-eur element around it, so it stays in EUR when '
+                        "the rest of the page is localized" % re.sub(r"&euro;|€", "EUR ", m.group(0)))
     return problems
 
 

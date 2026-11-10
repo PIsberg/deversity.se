@@ -1,4 +1,4 @@
-# The two checks in tools/ only help if something runs them. Both exist because
+# The checks in tools/ only help if something runs them. The first two exist because
 # of defects that were invisible in review and invisible in the browser:
 #
 #   * #13 shipped two logo SVGs with a duplicate fill attribute on the root.
@@ -35,3 +35,9 @@ jobs:
 
       - name: Pages close their tags, resolve their assets and keep their wiring
         run: python3 tools/check-pages.py
+
+      # The tier tables once showed SEK for the bands Paddle prices and EUR for
+      # the rest of the page. This pins the one-currency rule in tier-prices.js.
+      # Node ships on ubuntu-latest and the test needs only its standard library.
+      - name: Tier prices localize all or nothing
+        run: node tools/test-tier-prices.js
