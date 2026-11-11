@@ -11,9 +11,12 @@
 //   1. Create the product and its yearly prices in the Paddle dashboard
 //      (Catalog → Products), and paste each price ID over its _UNSET value.
 //      That includes addonPriceId, one yearly "each further 200 developers" price.
-//   2. Put the EUR list price in each `.price` cell in index.html. Paddle
-//      replaces it with a localized price when it can; the markup value is what
-//      visitors see when paddle.js is blocked.
+//   2. Put the EUR list price in each `.price` cell in index.html, as text and
+//      as data-eur (`<td class="price" data-tier-key="t1" data-eur="250">&euro;250</td>`).
+//      Paddle replaces it with a localized price when it can, and data-eur lets
+//      assets/tier-prices.js convert the cells Paddle does not price, so the page
+//      keeps one currency. The markup value is what visitors see when paddle.js
+//      is blocked. tools/check-pages.py fails on a euro amount without data-eur.
 //   3. Rewrite the Commercial card in #licensing, which still says checkout is
 //      not open, and add llm-light to terms.html and refunds.html.
 //
