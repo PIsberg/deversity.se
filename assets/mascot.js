@@ -15,14 +15,21 @@
    and JaCoCo measured 92 percent line coverage on the core module against a 70 percent
    gate. If the library changes, change the words here too.
 
-   Respects prefers-reduced-motion (it sits still and still answers clicks) and
-   stays gone for the session once dismissed. */
+   Respects prefers-reduced-motion: it sits still in the bottom right corner and still
+   answers clicks. A visitor with that preference gets a small switch in that corner
+   that lets this one thing roam anyway and, pressed again, sits it back down. The
+   choice is theirs, so it is kept in localStorage (heisenbug:motion) until they flip
+   the switch back. Nobody else sees the switch. tools/test-mascot-motion.js pins the
+   still default, the opt-in and the opt-out.
+
+   It stays gone for the session once dismissed. */
 
 (() => {
   'use strict';
 
   const NAME = 'Heisenbug';
   const DISMISS_KEY = 'heisenbug:dismissed';
+  const MOTION_KEY = 'heisenbug:motion';       // 'on' once a reduced-motion visitor has let it roam
 
   // ---------------------------------------------------------------------------
   // Words
@@ -128,6 +135,10 @@
       n + ' clicks and no deadlock. Suspicious.',
     ],
     greeting: 'Hi. I am ' + NAME + '. I was forced out of hiding and now I live here.',
+    // Reduced motion only. The switch shows > while it sits still and || while it roams.
+    greetingStill: 'Hi. I am ' + NAME + '. Your system asks for less motion, so I am sitting still. Press > next to me if you want me to roam.',
+    roam:  ['Six legs, cleared to move. Press || and I sit back down.', 'Roaming. Press || if I get to be too much.'],
+    still: ['Sitting still. Press > if you change your mind.', 'Parked. All six legs. Press > to let me out again.'],
   };
 
   // Said sometimes when it lands on one of these. First match wins.
@@ -151,7 +162,13 @@
   // Setup
   // ---------------------------------------------------------------------------
 
-  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // prefersReduced is what the visitor's system says and never changes here. reduceMotion
+  // is what the mascot does about it: the same thing, until the visitor uses the motion
+  // switch to let it roam. Sitting still is the default, never the other way round.
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let roamAllowed = false;
+  try { roamAllowed = localStorage.getItem(MOTION_KEY) === 'on'; } catch { /* storage blocked: nothing remembered, the switch still works */ }
+  let reduceMotion = prefersReduced && !roamAllowed;
   try { if (sessionStorage.getItem(DISMISS_KEY)) return; } catch { /* storage blocked: just show it */ }
 
   // Elements it can stand on. Top edges become platforms; the viewport bottom is the floor.
@@ -217,12 +234,20 @@
   closeBtn.textContent = '×';
   closeBtn.setAttribute('aria-label', 'Send ' + NAME + ' away for this visit');
 
+  // The motion switch. Only built for visitors whose system asks for reduced motion.
+  const motionBtn = prefersReduced ? document.createElement('button') : null;
+  if (motionBtn) {
+    motionBtn.type = 'button';
+    motionBtn.className = 'mx-motion';
+    motionBtn.setAttribute('aria-label', 'Let ' + NAME + ' move around');   // a toggle: the name stays, aria-pressed changes
+  }
+
   const live = document.createElement('div');
   live.className = 'mx-live';
   live.setAttribute('role', 'status');
   live.setAttribute('aria-live', 'polite');
 
-  root.append(body, bubble, closeBtn, live);
+  root.append(body, bubble, ...(motionBtn ? [motionBtn] : []), closeBtn, live);
 
   // ---------------------------------------------------------------------------
   // The glyph: a top-down bug in a 7x5 text grid
@@ -646,6 +671,52 @@
     say(pick(QUIPS.wake), { priority: 2 });
   }
 
+  // The still pose, for reduced motion: bottom right, upright, on no platform, nothing mid-way.
+  function park() {
+    mode = 'stand';
+    plat = null; drag = null; walking = false; spin = null;
+    vx = 0; vy = 0; theta = 0; omega = 0; sx = 1; sy = 1; bob = 0;
+    chewUntil = 0; surprisedUntil = 0; wiggleUntil = 0; curiousUntil = 0; avoidUntil = 0;
+    eyesUntil = 0; antennaeUntil = 0;
+    setMouth(null); setLegs('rest'); setEyes(EYES.open); setAntennae('up');
+    toCorner();
+  }
+  // Where it sits when it sits still. Also called when the viewport or the glyph changes
+  // size, so the still body and the motion switch stay together.
+  function toCorner() {
+    x = vw - w - 22;
+    y = vh - h - 18;
+  }
+
+  function syncMotionBtn() {
+    if (!motionBtn) return;
+    motionBtn.textContent = reduceMotion ? '>' : '||';
+    motionBtn.title = reduceMotion ? 'Let ' + NAME + ' move around' : 'Make ' + NAME + ' sit still';
+    motionBtn.setAttribute('aria-pressed', reduceMotion ? 'false' : 'true');
+  }
+
+  // The motion switch: a reduced-motion visitor lets it roam, or sends it back to sitting still.
+  function setMotion(on) {
+    if (!motionBtn || mode === 'gone' || on === !reduceMotion) return;
+    const now = performance.now();
+    reduceMotion = !on;
+    try {
+      if (on) localStorage.setItem(MOTION_KEY, 'on'); else localStorage.removeItem(MOTION_KEY);
+    } catch { /* storage blocked: it works for this page view and is asked again on the next */ }
+    hush();
+    lastActivity = now;
+    if (on) {
+      mode = 'air'; plat = null; vx = 0; vy = -260;   // a small hop off the parking spot, then whatever is below
+      say(pick(QUIPS.roam), { priority: 5, live: true });
+    } else {
+      for (const p of particles) p.el.remove();
+      particles = [];
+      park();
+      say(pick(QUIPS.still), { priority: 5, live: true });
+    }
+    syncMotionBtn();
+  }
+
   function dismiss() {
     if (mode === 'gone') return;
     try { sessionStorage.setItem(DISMISS_KEY, '1'); } catch { /* fine */ }
@@ -883,6 +954,9 @@
     glyph.style.transform = 'rotate(' + theta.toFixed(1) + 'deg)';
     if (glyphDirty) { glyph.textContent = renderGlyph(); glyphDirty = false; }
     closeBtn.style.transform = 'translate3d(' + Math.min(x + w - 12, vw - 20).toFixed(1) + 'px,' + (y - 6).toFixed(1) + 'px,0)';
+    // The switch does not follow the body. It stays at the parking spot, so the way back
+    // to sitting still is never a moving target for someone who is bothered by motion.
+    if (motionBtn) motionBtn.style.transform = 'translate3d(' + Math.max(2, vw - w - 38).toFixed(1) + 'px,' + Math.max(2, vh - h - 30).toFixed(1) + 'px,0)';
     positionBubble();
   }
 
@@ -1015,11 +1089,16 @@
   body.addEventListener('keydown', (e) => { if (e.key === 'Escape') dismiss(); });
   body.addEventListener('dragstart', (e) => e.preventDefault());
   closeBtn.addEventListener('click', dismiss);
+  if (motionBtn) motionBtn.addEventListener('click', () => setMotion(reduceMotion));
 
   let resizeTimer = 0;
   window.addEventListener('resize', () => {
     clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(() => { measure(); refreshPlatforms(); x = clamp(x, 0, vw - w); y = clamp(y, -h, vh - h); }, 120);
+    resizeTimer = setTimeout(() => {
+      measure(); refreshPlatforms();
+      if (reduceMotion) toCorner();
+      else { x = clamp(x, 0, vw - w); y = clamp(y, -h, vh - h); }
+    }, 120);
   });
   document.addEventListener('visibilitychange', () => { last = performance.now(); });
 
@@ -1035,13 +1114,12 @@
     refreshPlatforms();
     const now = performance.now();
     lastActivity = now;
+    syncMotionBtn();
     if (reduceMotion) {
-      mode = 'stand';
-      x = vw - w - 22;
-      y = vh - h - 18;
+      park();
       landedOnce = true;
       draw();
-      say(QUIPS.greeting, { priority: 3, hold: 6000 });
+      say(QUIPS.greetingStill, { priority: 3, hold: 9000, live: true });   // live: the switch is new to a screen reader user too
       nextQuipAt = now + 20000;
     } else {
       // enter from above, somewhere in the middle, and fall onto whatever is there
@@ -1051,7 +1129,7 @@
       mode = 'air';
       facing = Math.random() < 0.5 ? -1 : 1;
     }
-    if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { measure(); refreshPlatforms(); });
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { measure(); refreshPlatforms(); if (reduceMotion) toCorner(); });
     requestAnimationFrame((t) => { last = t; frame(t); });
   }
 

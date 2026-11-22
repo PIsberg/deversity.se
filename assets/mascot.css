@@ -135,6 +135,31 @@
 .mx-root:focus-within .mx-close { opacity: 1; visibility: visible; transition-delay: 0s; }
 .mx-close:hover { color: var(--ink); border-color: var(--faint); }
 
+/* ---------- Motion switch ---------- */
+
+/* Only in the page for visitors whose system asks for reduced motion; mascot.js adds it.
+   Always shown and always in the same corner: while the mascot sits still it is the only
+   sign that the thing can move, and once it roams it is the way back, which must not be
+   a moving target or a hover-only one for someone who is bothered by motion. */
+.mx-motion {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 24px;
+  height: 24px;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--panel-2);
+  color: var(--muted);
+  font: 700 11px / 22px var(--mono);
+  text-align: center;
+  cursor: pointer;
+  pointer-events: auto;
+}
+.mx-motion:hover { color: var(--ink); border-color: var(--faint); }
+
 /* ---------- Text particles ---------- */
 
 .mx-p {
