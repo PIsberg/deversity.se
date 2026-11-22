@@ -26,7 +26,7 @@ jobs:
   static-checks:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       # No setup-python step: the scripts import only the standard library, and
       # ubuntu-latest ships python3. One less action to keep current.
@@ -41,3 +41,9 @@ jobs:
       # Node ships on ubuntu-latest and the test needs only its standard library.
       - name: Tier prices localize all or nothing
         run: node tools/test-tier-prices.js
+
+      # The homepage mascot sits still under prefers-reduced-motion and moves only
+      # after the visitor asks it to. Nobody notices that default breaking unless
+      # their own system has animations off, so this pins it, with simulated time.
+      - name: Mascot stays still under reduced motion until asked
+        run: node tools/test-mascot-motion.js
